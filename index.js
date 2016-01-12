@@ -11,11 +11,11 @@ app.get('/', (req, res) => {
 })
 
 app.get('/polls', (req, res) => {
-  res.sendFile(path.join(__dirname, '/public/poll.html'))
+  res.sendFile(path.join(__dirname, '/public/live_poll.html'))
 })
 
 app.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, '/public/admin.html'))
+  res.sendFile(path.join(__dirname, '/public/admin_poll.html'))
 })
 
 http.listen(process.env.PORT || 3000, () => {
