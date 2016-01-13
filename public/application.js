@@ -1,6 +1,4 @@
 $('.submit-live-poll').on('click', (e) => {
-  console.log('wow');
-
   var firstQuality = $('.new-live-poll .f-q').val()
   var secondQuality = $('.new-live-poll .s-q').val()
   var thirdQuality = $('.new-live-poll .t-q').val()
@@ -11,8 +9,6 @@ $('.submit-live-poll').on('click', (e) => {
 })
 
 $('.submit-admin-poll').on('click', (e) => {
-  console.log('wow');
-
   var firstQuality = $('.new-admin-poll .f-q').val()
   var secondQuality = $('.new-admin-poll .s-q').val()
   var thirdQuality = $('.new-admin-poll .t-q').val()
