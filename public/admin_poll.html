@@ -1,12 +1,12 @@
 <h1>ADMIN</h1>
 
 <section class="new-admin-poll">
-  <form>
-    <input type="text" placeholder="First_quality" class="f-q">
-    <input type="text" placeholder="Second quality" class="s-q">
-    <input type="text" placeholder="Third quality" class="t-q">
-  </form>
-  <button id="submit-admin-poll" class="submit-admin-poll">Submit</button>
+  <form action="/admin_poll" method="post">
+    <input name='adminPoll[responses][]' type="text" placeholder="First_quality" class="f-q">
+    <input name='adminPoll[responses][]' type="text" placeholder="Second quality" class="s-q">
+    <input name='adminPoll[responses][]' type="text" placeholder="Third quality" class="t-q">
+   <button id="submit-admin-poll" class="submit-admin-poll">Submit</button>
+</form>
 </section>
 
 <div class="admin-poll"></div>

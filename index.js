@@ -4,7 +4,10 @@ const socketIo = require('socket.io')
 const _ = require('lodash')
 const app = express()
 const port = process.env.PORT || 3000
+const bodyParser = require('body-parser')
 const votes = {}
+const adminPolls = {}
+const adminUserPolls = {}
 
 const server = http.createServer(app)
 .listen(port, () => {
@@ -14,13 +17,22 @@ const server = http.createServer(app)
 const io = socketIo(server)
 
 app.use(express.static('public'))
+app.use(bodyParser.urlencoded({ extended: true }))
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html')
 })
 
-app.get('/admin/:id', (req, res) => {
+app.post('/admin_poll', (req, res) => {
+  poll = req.body.adminPoll
+  console.log(poll);
+  // urlHash(poll);
+  // var id = poll.id;
+  // polls[id] = poll;
+  // res.send(`<div><a href='/" + poll.adminUrl + "/" + poll.id + "'>Admin URL</a><br><a href='/poll/" + poll.id + "'>Poll URL</a></div>`)
+})
 
+app.get('/admin/:id', (req, res) => {
   res.sendFile(__dirname + '/public/admin.html')
 })
 
