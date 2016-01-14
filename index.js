@@ -9,6 +9,7 @@ const bodyParser = require('body-parser')
 const votes = {}
 const adminPolls = {}
 const adminUserPolls = {}
+const $ = require('jquery')
 
 const server = http.createServer(app)
 .listen(port, () => {
@@ -26,14 +27,19 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html')
 })
 
+const urlHash = () => {
+  return Math.random().toString(36).substring(7)
+}
+
 app.post('/admin_poll', (req, res) => {
-  poll = req.body.adminPoll
-  console.log(poll);
-  res.render('admin', poll[0]);
+  var id = urlHash()
+  adminPolls[id] = req.body.adminPoll
+  req.body.adminPoll
+  res.render('links', {links: id});
 })
 
 app.get('/admin/:id', (req, res) => {
-  res.sendFile(__dirname + '/public/admin.html')
+  res.render('admin', {adminPolls: adminPolls});
 })
 
 app.get('/live_poll', (req, res) => {
