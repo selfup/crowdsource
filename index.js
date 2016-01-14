@@ -1,3 +1,4 @@
+const ejs = require('ejs')
 const http = require('http')
 const express = require('express')
 const socketIo = require('socket.io')
@@ -19,6 +20,8 @@ const io = socketIo(server)
 app.use(express.static('public'))
 app.use(bodyParser.urlencoded({ extended: true }))
 
+app.set('view engine', 'ejs')
+
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html')
 })
@@ -26,10 +29,7 @@ app.get('/', (req, res) => {
 app.post('/admin_poll', (req, res) => {
   poll = req.body.adminPoll
   console.log(poll);
-  // urlHash(poll);
-  // var id = poll.id;
-  // polls[id] = poll;
-  // res.send(`<div><a href='/" + poll.adminUrl + "/" + poll.id + "'>Admin URL</a><br><a href='/poll/" + poll.id + "'>Poll URL</a></div>`)
+  res.render('admin', poll[0]);
 })
 
 app.get('/admin/:id', (req, res) => {
