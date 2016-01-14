@@ -1,8 +1,10 @@
 const http = require('http')
 const express = require('express')
 const socketIo = require('socket.io')
+const _ = require('lodash')
 const app = express()
 const port = process.env.PORT || 3000
+const votes = {}
 
 const server = http.createServer(app)
 .listen(port, () => {
@@ -17,11 +19,16 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html')
 })
 
-app.get('/polls', (req, res) => {
+app.get('/admin/:id', (req, res) => {
+
+  res.sendFile(__dirname + '/public/admin.html')
+})
+
+app.get('/live_poll', (req, res) => {
   res.sendFile(__dirname + '/public/live_poll.html')
 })
 
-app.get('/admin', (req, res) => {
+app.get('/admin_poll', (req, res) => {
   res.sendFile(__dirname + '/public/admin_poll.html')
 })
 
@@ -48,8 +55,6 @@ io.on('connection', (socket) => {
   })
 })
 
-const votes = {}
-
 const countVotes = (votes) => {
   const voteCount = {
       A: 0,
@@ -60,7 +65,7 @@ const countVotes = (votes) => {
   for (vote in votes) {
     voteCount[votes[vote]]++
   }
-  return voteCount;
+  return voteCount
 }
 
 module.exports = server

@@ -6,6 +6,9 @@ const userVote = document.getElementById('user-vote');
 const connectionCount = document.getElementById('connection-count')
 const buttons = document.querySelectorAll('#choices button');
 const statusMessage = document.getElementById('status-message')
+const adminPollCreate = document.getElementById('submit-admin-poll')
+const adminPolls = []
+const studentPolls = []
 
 socket.on('usersConnected', (count) => {
   connectionCount.innerText = 'Connected Users: ' + count
@@ -16,7 +19,7 @@ socket.on('statusMessage', (message) => {
 })
 
 socket.on('userVote', (message) => {
-  userVote.innerText = `Your vote is: ${message} and it has been logged! Thanks for VOTING!`;
+  userVote.innerText = `Your vote is: ${message} and it has been logged! Thanks for VOTING!`
 })
 
 socket.on('voteCount', (votes) => {
@@ -40,11 +43,26 @@ $('.submit-live-poll').on('click', (e) => {
 })
 
 $('.submit-admin-poll').on('click', (e) => {
+  let adUrl = generateAdminUrl(); let alUrl = generateLiveAdminUrl()
+  appendAdminLink(e, adUrl)
+  appendAdminLiveLink(e, alUrl)
   var firstQuality = $('.new-admin-poll .f-q').val()
   var secondQuality = $('.new-admin-poll .s-q').val()
   var thirdQuality = $('.new-admin-poll .t-q').val()
   appendVals('.admin-poll', firstQuality, secondQuality, thirdQuality)
 })
+
+const generateAdminUrl = () => {
+  let adminLinkUrl = window.location.href.replace('admin_poll', '')
+  const urlHash = Math.random().toString(36).substring(7)
+  return `${adminLinkUrl}admin/${urlHash}`
+}
+
+const generateLiveAdminUrl = () => {
+  let adminLiveUrl = window.location.href.replace('admin_poll', '')
+  const urlHash = Math.random().toString(36).substring(7)
+  return `${adminLiveUrl}student_poll/${urlHash}`
+}
 
 const pollQualities = (firstQ, secondQ, thirdQ) => {
   return `<div>
@@ -58,4 +76,18 @@ const appendVals = (poll, fQ, sQ, tQ) => {
   $(poll).append(
     pollQualities(fQ, sQ, tQ)
   )
+}
+
+const appendAdminLink = (e, url) => {
+  $('.admin-link-gen').empty()
+                      .append(`<div>
+                                <a href=${url}>Admin Link</a>
+                               </div>`)
+}
+
+const appendAdminLiveLink = (e, url) => {
+  $('.admin-live-gen').empty()
+                      .append(`<div>
+                                <a href=${url}>Student Poll Link</a>
+                               </div>`)
 }
