@@ -9,6 +9,7 @@ const statusMessage = document.getElementById('status-message')
 const adminPolls = []
 const studentPolls = []
 
+
 socket.on('usersConnected', (count) => {
   connectionCount.innerText = 'Connected Users: ' + count
 })
@@ -43,11 +44,25 @@ $('.submit-live-poll').on('click', (e) => {
 })
 
 $('.submit-admin-poll').on('click', (e) => {
+  let url = generateAdminUrl()
+  appendAdminLink(e, url)
   var firstQuality = $('.new-admin-poll .f-q').val()
   var secondQuality = $('.new-admin-poll .s-q').val()
   var thirdQuality = $('.new-admin-poll .t-q').val()
   appendVals('.admin-poll', firstQuality, secondQuality, thirdQuality)
 })
+
+const generateAdminUrl = () => {
+  let adminLinkUrl = window.location.href.replace('admin_poll', '')
+  const urlHash = Math.random().toString(36).substring(7)
+  console.log(urlHash);
+  console.log(urlHash);
+  return `${adminLinkUrl}admin/${urlHash}`
+}
+
+const generateLiveUrl = () => {
+
+}
 
 const pollQualities = (firstQ, secondQ, thirdQ) => {
   return `<div>
@@ -61,4 +76,11 @@ const appendVals = (poll, fQ, sQ, tQ) => {
   $(poll).append(
     pollQualities(fQ, sQ, tQ)
   )
+}
+
+const appendAdminLink = (e, url) => {
+  $('.admin-link-gen').empty()
+                      .append(`<div>
+                                <a href=${url}>Admin Link</a>
+                               </div>`)
 }

@@ -1,6 +1,7 @@
 const http = require('http')
 const express = require('express')
 const socketIo = require('socket.io')
+const _ = require('lodash')
 const app = express()
 const port = process.env.PORT || 3000
 
@@ -17,11 +18,11 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html')
 })
 
-app.get('/polls', (req, res) => {
+app.get('/live_poll', (req, res) => {
   res.sendFile(__dirname + '/public/live_poll.html')
 })
 
-app.get('/admin', (req, res) => {
+app.get('/admin_poll', (req, res) => {
   res.sendFile(__dirname + '/public/admin_poll.html')
 })
 
