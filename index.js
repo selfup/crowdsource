@@ -41,8 +41,11 @@ app.post('/admin_poll', (req, res) => {
 app.get('/admin_poll/:id', (req, res) => {
   const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`.split('/')
   const link = url[4]
-  console.log(adminPolls);
-  res.render('admin', {adminPolls: adminPolls[`${link}`], link: link});
+  if (!adminPolls[`${link}`]) {
+    res.render('404')
+  } else {
+    res.render('admin', {adminPolls: adminPolls[`${link}`], link: link});
+  }
 })
 
 app.get('/live_poll', (req, res) => {
