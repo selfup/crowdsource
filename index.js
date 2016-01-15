@@ -7,6 +7,7 @@ const app = express()
 const port = process.env.PORT || 3000
 const bodyParser = require('body-parser')
 const votes = {}
+const adminVotes = {}
 const adminPolls = {}
 const adminUserPolls = {}
 const $ = require('jquery')
@@ -34,7 +35,9 @@ app.post('/admin_poll', (req, res) => {
   const url = req.protocol + '://' + req.get('host') + req.originalUrl;
   var id = urlHash()
   adminPolls[id] = req.body.adminPoll
+  adminVotes[id] = adminTally
   console.log(adminPolls);
+  console.log(adminVotes)
   res.render('links', {links: id, url: url});
 })
 
@@ -63,7 +66,7 @@ app.get('/student_poll', (req, res) => {
 io.on('connection', (socket) => {
   io.sockets.emit('usersConnected', io.engine.clientsCount)
   socket.emit('statusMessage', 'You have connected.')
-
+  console.log('CONNECTED')
   socket.on('message', (channel, message) => {
     if (channel === 'voteCast') {
       votes[socket.id] = message;
@@ -89,6 +92,12 @@ const countVotes = (votes) => {
     voteCount[votes[vote]]++
   }
   return voteCount
+}
+
+const adminTally = {
+    first: 0,
+    second: 0,
+    third: 0
 }
 
 module.exports = server
