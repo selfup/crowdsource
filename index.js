@@ -10,12 +10,14 @@ const votes = {}
 const adminPolls = {}
 const adminUserPolls = {}
 const $ = require('jquery')
+
 const server = http.createServer(app)
 .listen(port, () => {
   console.log('Listening on port ' + port + '.')
 })
 
 const io = socketIo(server)
+
 app.use(express.static('public'))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.set('view engine', 'ejs')
