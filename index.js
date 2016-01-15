@@ -34,7 +34,7 @@ const urlHash = () => {
 app.post('/admin_poll', (req, res) => {
   var id = urlHash()
   adminPolls[id] = req.body.adminPoll
-  req.body.adminPoll
+  console.log(adminPolls);
   res.render('links', {links: id});
 })
 
@@ -53,7 +53,6 @@ app.get('/admin_poll', (req, res) => {
 app.get('/student_poll', (req, res) => {
   res.sendFile(__dirname + '/public/student_poll.html')
 })
-
 
 io.on('connection', (socket) => {
   io.sockets.emit('usersConnected', io.engine.clientsCount)
