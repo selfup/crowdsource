@@ -3,7 +3,8 @@
 <title></title>
 </head>
 <body>
-  <%= link %>
-  <%= adminPolls.responses %>
+  <% for(var i=0; i<adminPolls.responses.length; i++) {%>
+     <p><%= adminPolls.responses[i] %></p>
+  <% } %>
 </body>
 </html>
