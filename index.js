@@ -10,17 +10,14 @@ const votes = {}
 const adminPolls = {}
 const adminUserPolls = {}
 const $ = require('jquery')
-
 const server = http.createServer(app)
 .listen(port, () => {
   console.log('Listening on port ' + port + '.')
 })
 
 const io = socketIo(server)
-
 app.use(express.static('public'))
 app.use(bodyParser.urlencoded({ extended: true }))
-
 app.set('view engine', 'ejs')
 
 app.get('/', (req, res) => {
@@ -32,14 +29,18 @@ const urlHash = () => {
 }
 
 app.post('/admin_poll', (req, res) => {
+  const url = req.protocol + '://' + req.get('host') + req.originalUrl;
   var id = urlHash()
   adminPolls[id] = req.body.adminPoll
   console.log(adminPolls);
-  res.render('links', {links: id});
+  res.render('links', {links: id, url: url});
 })
 
-app.get('/admin/:id', (req, res) => {
-  res.render('admin', {adminPolls: adminPolls});
+app.get('/admin_poll/:id', (req, res) => {
+  const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`.split('/')
+  const link = url[4]
+  console.log(adminPolls);
+  res.render('admin', {adminPolls: adminPolls[`${link}`], link: link});
 })
 
 app.get('/live_poll', (req, res) => {
