@@ -9,6 +9,7 @@ const bodyParser = require('body-parser')
 const votes = {}
 const adminVotes = {}
 const adminPolls = {}
+const liveAdminPolls = {}
 const adminUserPolls = {}
 const $ = require('jquery')
 
@@ -33,12 +34,17 @@ const urlHash = () => {
 
 app.post('/admin_poll', (req, res) => {
   const url = req.protocol + '://' + req.get('host') + req.originalUrl;
-  var id = urlHash()
+  const liveUrl = req.protocol + '://' + req.get('host') + '/live_poll'
+  const id = urlHash()
+  const liveId = urlHash()
   adminPolls[id] = req.body.adminPoll
   adminVotes[id] = adminTally
-  console.log(adminPolls);
+  adminPolls[`${id}`]['refId'] = id
+  liveAdminPolls[liveId] = adminPolls[id]
+  console.log(adminPolls)
+  console.log(liveAdminPolls)
   console.log(adminVotes)
-  res.render('links', {links: id, url: url});
+  res.render('links', {links: id, url: url, liveId: liveId, liveUrl: liveUrl});
 })
 
 app.get('/admin_poll/:id', (req, res) => {
@@ -51,8 +57,14 @@ app.get('/admin_poll/:id', (req, res) => {
   }
 })
 
-app.get('/live_poll', (req, res) => {
-  res.sendFile(__dirname + '/public/live_poll.html')
+app.get('/live_poll/:id', (req, res) => {
+  const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`.split('/')
+  const liveLink = url[4]
+  if (!liveAdminPolls[`${liveLink}`]) {
+    res.render('404')
+  } else {
+    res.render('liveAdminPoll', { liveAdminPolls: liveAdminPolls[`${liveLink}`]});
+  }
 })
 
 app.get('/admin_poll', (req, res) => {
