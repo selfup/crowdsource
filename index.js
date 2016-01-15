@@ -36,8 +36,11 @@ app.post('/admin_poll', (req, res) => {
   res.render('links', {links: id, url: url});
 })
 
-app.get('*/admin_poll/:id', (req, res) => {
-  res.render('admin', {adminPolls: adminPolls});
+app.get('/admin_poll/:id', (req, res) => {
+  const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`.split('/')
+  const link = url[4]
+  console.log(adminPolls);
+  res.render('admin', {adminPolls: adminPolls[`${link}`], link: link});
 })
 
 app.get('/live_poll', (req, res) => {
