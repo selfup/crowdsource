@@ -34,15 +34,17 @@ const urlHash = () => {
 
 app.post('/admin_poll', (req, res) => {
   const url = req.protocol + '://' + req.get('host') + req.originalUrl;
-  var id = urlHash()
-  var liveId = urlHash()
+  const liveUrl = req.protocol + '://' + req.get('host') + '/live_poll'
+  const id = urlHash()
+  const liveId = urlHash()
   adminPolls[id] = req.body.adminPoll
   adminVotes[id] = adminTally
+  adminPolls[`${id}`]['refId'] = id
   liveAdminPolls[liveId] = adminPolls[id]
   console.log(adminPolls)
   console.log(liveAdminPolls)
-  console.log(adminTally)
-  res.render('links', {links: id, url: url});
+  console.log(adminVotes)
+  res.render('links', {links: id, url: url, liveId: liveId, liveUrl: liveUrl});
 })
 
 app.get('/admin_poll/:id', (req, res) => {

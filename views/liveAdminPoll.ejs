@@ -3,10 +3,10 @@
 <title></title>
 </head>
 <body>
-  <% Object.getOwnPropertyNames(liveAdminPolls.answers).forEach(function(val, idx, array) { %>
+  <h3><% Object.getOwnPropertyNames(liveAdminPolls.answers).forEach(function(val, idx, array) { %>
   <%= liveAdminPolls.answers[val] %>
-  <% }) %>
+  <% }) %></h3>
 
-
+  <h3><%= liveAdminPolls['refId'] %></h3>
 </body>
 </html>
