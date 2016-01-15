@@ -7,15 +7,18 @@ const app = express()
 const port = process.env.PORT || 3000
 const bodyParser = require('body-parser')
 const votes = {}
+const adminVotes = {}
 const adminPolls = {}
 const adminUserPolls = {}
 const $ = require('jquery')
+
 const server = http.createServer(app)
 .listen(port, () => {
   console.log('Listening on port ' + port + '.')
 })
 
 const io = socketIo(server)
+
 app.use(express.static('public'))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.set('view engine', 'ejs')
@@ -32,15 +35,20 @@ app.post('/admin_poll', (req, res) => {
   const url = req.protocol + '://' + req.get('host') + req.originalUrl;
   var id = urlHash()
   adminPolls[id] = req.body.adminPoll
+  adminVotes[id] = adminTally
   console.log(adminPolls);
+  console.log(adminVotes)
   res.render('links', {links: id, url: url});
 })
 
 app.get('/admin_poll/:id', (req, res) => {
   const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`.split('/')
   const link = url[4]
-  console.log(adminPolls);
-  res.render('admin', {adminPolls: adminPolls[`${link}`], link: link});
+  if (!adminPolls[`${link}`]) {
+    res.render('404')
+  } else {
+    res.render('admin', {adminPolls: adminPolls[`${link}`], link: link});
+  }
 })
 
 app.get('/live_poll', (req, res) => {
@@ -58,7 +66,7 @@ app.get('/student_poll', (req, res) => {
 io.on('connection', (socket) => {
   io.sockets.emit('usersConnected', io.engine.clientsCount)
   socket.emit('statusMessage', 'You have connected.')
-
+  console.log('CONNECTED')
   socket.on('message', (channel, message) => {
     if (channel === 'voteCast') {
       votes[socket.id] = message;
@@ -84,6 +92,12 @@ const countVotes = (votes) => {
     voteCount[votes[vote]]++
   }
   return voteCount
+}
+
+const adminTally = {
+    first: 0,
+    second: 0,
+    third: 0
 }
 
 module.exports = server
