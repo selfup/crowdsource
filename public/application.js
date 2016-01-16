@@ -5,18 +5,26 @@ const userVote = document.getElementById('submits-live');
 const connectionCount = document.getElementById('connection-count')
 const buttons = document.querySelectorAll('#choices button');
 const statusMessage = document.getElementById('status-message')
-const submitsLive = document.getElementById('submits-live')
+const submitsLive = document.querySelectorAll('#submits-live')
 
 socket.on('liveAdminVote', (adminVotes) => {
   socket.send(adminVotes[`${window.location.href.split('/')[4]}`])
   console.log(adminVotes[`${window.location.href.split('/')[4]}`]);
 })
 
-$('#submits-live').on('click', (e) => {
-  socket.send('liveAdminVotes', adminVotes)
-  console.log('KJKJK');
-  console.log(adminVotes[`${window.location.href.split('/')[4]}`]);
-})
+for (let i = 0; i < submitsLive.length; i++) {
+  submitsLive[i].addEventListener('click', function () {
+    console.log('AHHH');
+    socket.send('voteCast', "LOL")
+    console.log("NOO");
+  })
+}
+//
+// socket.on('click', (e) => {
+//   socket.send('voteCast', adminVotes)
+//   console.log('KJKJK');
+//   console.log(adminVotes[`${window.location.href.split('/')[4]}`]);
+// })
 
 socket.on('usersConnected', (count) => {
   connectionCount.innerText = 'Connected Users: ' + count

@@ -3,11 +3,11 @@
 <title></title>
 </head>
 <body>
-<form action="/live_poll" method="post" id="live-admin-response">
+<%# <form id="live-admin-response">%>
   <% Object.getOwnPropertyNames(liveAdminPolls.answers).forEach(function(val, idx, array) { %>
   <button id="submits-live" name="liveAdVote[<%= liveAdminPolls['refId'] %>]" value=<%= Object.keys(liveAdminPolls.answers)[idx] %>><%= liveAdminPolls.answers[val] %></button>
   <% }) %>
-</form>
+<%# </form>%>
 <h3><%= liveAdminPolls['refId'] %></h3>
 
 <script src="/jquery.js"></script>

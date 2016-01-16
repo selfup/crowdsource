@@ -67,6 +67,10 @@ app.get('/admin_poll/:id', (req, res) => {
   }
 })
 
+app.get('/thanks', (req, res) => {
+  res.render('thanks')
+})
+
 app.get('/live_poll/:id', (req, res) => {
   const url = urlGen(req)
   const liveLink = url.split('/')[4]
@@ -83,10 +87,11 @@ app.post('/live_poll', (req, res) => {
   const id = urlHash(); const liveId = urlHash()
   const refAdID = req.body.liveAdVote
   const propUpdate = refAdID[`${Object.keys(refAdID)[0]}`]
+  console.log(propUpdate)
   const adminVoteObject = adminVotes[`${Object.keys(refAdID)[0]}`]
   console.log(adminVoteObject[propUpdate] += 1)
-  console.log('SENT')
-  res.redirect('/thanks');
+  // console.log('SENT')
+  res.redirect('/thanks')
 })
 
 app.get('/thanks', (req, res) => {
@@ -105,10 +110,7 @@ io.on('connection', (socket) => {
   console.log(adminVotes)
   socket.on('message', (channel, message) => {
     if (channel === 'voteCast') {
-      votes[socket.id] = message;
-      socket.emit('userVote', message)
       console.log('lolol')
-      socket.emit('voteCount', countVotes(votes))
     }
   })
 
