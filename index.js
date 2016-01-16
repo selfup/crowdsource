@@ -81,10 +81,12 @@ app.get('/live_poll/:id', (req, res) => {
 app.post('/live_poll', (req, res) => {
   const url = urlGen(req); const liveUrl = liveUrlGen(req)
   const id = urlHash(); const liveId = urlHash()
-  console.log(req.body.liveAdVote.response);
-
-//  adminPolls[id] = req.body.adminPoll; adminVotes[id] = adminTally
-//  adminPolls[`${id}`]['refId'] = id; liveAdminPolls[liveId] = adminPolls[id]
+  const refAdID = req.body.liveAdVote
+  const propUpdate = refAdID[`${Object.keys(refAdID)[0]}`]
+  const adminVoteObject = adminVotes[`${Object.keys(refAdID)[0]}`]
+  console.log(refAdID)
+  console.log(propUpdate)
+  console.log(adminVoteObject[propUpdate] += 1)
 
   res.render('thanks')
 })

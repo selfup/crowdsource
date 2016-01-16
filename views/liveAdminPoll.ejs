@@ -5,7 +5,7 @@
 <body>
 <form action="/live_poll" method="post" id="live-admin-response">
   <% Object.getOwnPropertyNames(liveAdminPolls.answers).forEach(function(val, idx, array) { %>
-  <button name="liveAdVote[response]" id="live-admin-response" value=<%= Object.keys(liveAdminPolls.answers)[idx] %>><%= liveAdminPolls.answers[val] %>Submit Response</button>
+  <button name="liveAdVote[<%= liveAdminPolls['refId'] %>]" id="live-admin-response" value=<%= Object.keys(liveAdminPolls.answers)[idx] %>><%= liveAdminPolls.answers[val] %>Submit Response</button>
   <% }) %>
 </form>
 <h3><%= liveAdminPolls['refId'] %></h3>
