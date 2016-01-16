@@ -3,10 +3,12 @@
 <title></title>
 </head>
 <body>
-  <h3><% Object.getOwnPropertyNames(liveAdminPolls.answers).forEach(function(val, idx, array) { %>
-  <%= liveAdminPolls.answers[val] %>
-  <% }) %></h3>
-
-  <h3><%= liveAdminPolls['refId'] %></h3>
+<form action="/live_poll" method="post">
+  <% Object.getOwnPropertyNames(liveAdminPolls.answers).forEach(function(val, idx, array) { %>
+  <input type="radio" name="lol" value="<%= liveAdminPolls.answers[val] %>"><%= liveAdminPolls.answers[val] %><br>
+  <% }) %>
+  <button id="submit-admin-poll" class="submit-admin-poll">Submit</button>
+</form>
+<h3><%= liveAdminPolls['refId'] %></h3>
 </body>
 </html>

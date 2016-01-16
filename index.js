@@ -76,6 +76,16 @@ app.get('/live_poll/:id', (req, res) => {
   }
 })
 
+app.post('/live_poll', (req, res) => {
+  const url = urlGen(req); const liveUrl = liveUrlGen(req)
+  const id = urlHash(); const liveId = urlHash()
+  
+//  adminPolls[id] = req.body.adminPoll; adminVotes[id] = adminTally
+//  adminPolls[`${id}`]['refId'] = id; liveAdminPolls[liveId] = adminPolls[id]
+  
+  res.render('thanks')
+})
+
 app.get('/student_poll', (req, res) => {
   res.sendFile(__dirname + '/public/student_poll.html')
 })
