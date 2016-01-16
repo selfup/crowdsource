@@ -84,11 +84,9 @@ app.post('/live_poll', (req, res) => {
   const refAdID = req.body.liveAdVote
   const propUpdate = refAdID[`${Object.keys(refAdID)[0]}`]
   const adminVoteObject = adminVotes[`${Object.keys(refAdID)[0]}`]
-  console.log(refAdID)
-  console.log(propUpdate)
   console.log(adminVoteObject[propUpdate] += 1)
-
-  res.render('thanks')
+  console.log('SENT')
+  res.sendFile(__dirname + '/public/thanks.html')
 })
 
 app.get('/student_poll', (req, res) => {
@@ -97,13 +95,15 @@ app.get('/student_poll', (req, res) => {
 
 io.on('connection', (socket) => {
   io.sockets.emit('usersConnected', io.engine.clientsCount)
-  socket.send(adminVotes)
-  socket.emit('liveAdminVote', adminVotes)
+  io.sockets.send(adminVotes)
+  io.emit('liveAdminVote', adminVotes)
+  console.log('WOW')
   console.log(adminVotes)
   socket.on('message', (channel, message) => {
     if (channel === 'voteCast') {
       votes[socket.id] = message;
       socket.emit('userVote', message)
+      console.log('lolol')
       socket.emit('voteCount', countVotes(votes))
     }
   })
@@ -113,19 +113,6 @@ io.on('connection', (socket) => {
     io.sockets.emit('usersConnected', io.engine.clientsCount)
   })
 })
-
-const countVotes = (votes) => {
-  const voteCount = {
-      A: 0,
-      B: 0,
-      C: 0,
-      D: 0
-  }
-  for (vote in votes) {
-    voteCount[votes[vote]]++
-  }
-  return voteCount
-}
 
 const adminTally = {
     first: 0,
