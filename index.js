@@ -32,24 +32,32 @@ const urlHash = () => {
   return Math.random().toString(36).substring(7)
 }
 
+const urlGen = (req) => {
+  return `${req.protocol}://${req.get('host')}${req.originalUrl}`
+}
+
+const liveUrlGen = (req) => {
+  return `${req.protocol}://${req.get('host')}/live_poll`
+}
+
+app.get('/admin_poll', (req, res) => {
+  res.sendFile(__dirname + '/public/admin_poll.html')
+})
+
 app.post('/admin_poll', (req, res) => {
-  const url = req.protocol + '://' + req.get('host') + req.originalUrl;
-  const liveUrl = req.protocol + '://' + req.get('host') + '/live_poll'
-  const id = urlHash()
-  const liveId = urlHash()
-  adminPolls[id] = req.body.adminPoll
-  adminVotes[id] = adminTally
-  adminPolls[`${id}`]['refId'] = id
-  liveAdminPolls[liveId] = adminPolls[id]
-  console.log(adminPolls)
-  console.log(liveAdminPolls)
-  console.log(adminVotes)
+  const url = urlGen(req); const liveUrl = liveUrlGen(req)
+  const id = urlHash(); const liveId = urlHash()
+  
+  adminPolls[id] = req.body.adminPoll; adminVotes[id] = adminTally
+  adminPolls[`${id}`]['refId'] = id; liveAdminPolls[liveId] = adminPolls[id]
+  
   res.render('links', {links: id, url: url, liveId: liveId, liveUrl: liveUrl});
 })
 
 app.get('/admin_poll/:id', (req, res) => {
-  const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`.split('/')
-  const link = url[4]
+  const url = urlGen(req)
+  const link = url.split('/')[4]
+  
   if (!adminPolls[`${link}`]) {
     res.render('404')
   } else {
@@ -58,17 +66,14 @@ app.get('/admin_poll/:id', (req, res) => {
 })
 
 app.get('/live_poll/:id', (req, res) => {
-  const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`.split('/')
-  const liveLink = url[4]
+  const url = urlGen(req)
+  const liveLink = url.split('/')[4]
+  
   if (!liveAdminPolls[`${liveLink}`]) {
     res.render('404')
   } else {
     res.render('liveAdminPoll', { liveAdminPolls: liveAdminPolls[`${liveLink}`]});
   }
-})
-
-app.get('/admin_poll', (req, res) => {
-  res.sendFile(__dirname + '/public/admin_poll.html')
 })
 
 app.get('/student_poll', (req, res) => {
