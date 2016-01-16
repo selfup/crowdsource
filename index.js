@@ -86,7 +86,11 @@ app.post('/live_poll', (req, res) => {
   const adminVoteObject = adminVotes[`${Object.keys(refAdID)[0]}`]
   console.log(adminVoteObject[propUpdate] += 1)
   console.log('SENT')
-  res.sendFile(__dirname + '/public/thanks.html')
+  res.redirect('/thanks');
+})
+
+app.get('/thanks', (req, res) => {
+  res.render('thanks')
 })
 
 app.get('/student_poll', (req, res) => {

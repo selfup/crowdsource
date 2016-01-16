@@ -22,16 +22,13 @@ socket.on('usersConnected', (count) => {
   connectionCount.innerText = 'Connected Users: ' + count
 })
 
-// socket.on('statusMessage', (message) => {
-//   statusMessage.innerText = message
-// })
-
 socket.on('userVote', (message) => {
   userVote.innerText = `Your vote is: ${message} and it has been logged! Thanks for VOTING!`;
 })
 
 socket.on('submitsLive', (message) => {
-  userVote.innerText = `Your vote is: ${message} and it has been logged! Thanks for VOTING!`;
+  socket.send(adminVotes[`${window.location.href.split('/')[4]}`])
+  console.log(adminVotes[`${window.location.href.split('/')[4]}`]);
 })
 
 // socket.on('voteCount', (votes) => {
