@@ -47,17 +47,19 @@ app.get('/admin_poll', (req, res) => {
 app.post('/admin_poll', (req, res) => {
   const url = urlGen(req); const liveUrl = liveUrlGen(req)
   const id = urlHash(); const liveId = urlHash()
-  
+
   adminPolls[id] = req.body.adminPoll; adminVotes[id] = adminTally
   adminPolls[`${id}`]['refId'] = id; liveAdminPolls[liveId] = adminPolls[id]
-  
+  console.log(liveAdminPolls)
+  console.log(adminPolls)
+  console.log(adminVotes)
   res.render('links', {links: id, url: url, liveId: liveId, liveUrl: liveUrl});
 })
 
 app.get('/admin_poll/:id', (req, res) => {
   const url = urlGen(req)
   const link = url.split('/')[4]
-  
+
   if (!adminPolls[`${link}`]) {
     res.render('404')
   } else {
@@ -68,12 +70,23 @@ app.get('/admin_poll/:id', (req, res) => {
 app.get('/live_poll/:id', (req, res) => {
   const url = urlGen(req)
   const liveLink = url.split('/')[4]
-  
+
   if (!liveAdminPolls[`${liveLink}`]) {
     res.render('404')
   } else {
     res.render('liveAdminPoll', { liveAdminPolls: liveAdminPolls[`${liveLink}`]});
   }
+})
+
+app.post('/live_poll', (req, res) => {
+  const url = urlGen(req); const liveUrl = liveUrlGen(req)
+  const id = urlHash(); const liveId = urlHash()
+  console.log(req.body.liveAdVote.response);
+
+//  adminPolls[id] = req.body.adminPoll; adminVotes[id] = adminTally
+//  adminPolls[`${id}`]['refId'] = id; liveAdminPolls[liveId] = adminPolls[id]
+
+  res.render('thanks')
 })
 
 app.get('/student_poll', (req, res) => {
@@ -82,8 +95,9 @@ app.get('/student_poll', (req, res) => {
 
 io.on('connection', (socket) => {
   io.sockets.emit('usersConnected', io.engine.clientsCount)
-  socket.emit('statusMessage', 'You have connected.')
-  console.log('CONNECTED')
+  socket.send(adminVotes)
+  socket.emit('liveAdminVote', adminVotes)
+  console.log(adminVotes)
   socket.on('message', (channel, message) => {
     if (channel === 'voteCast') {
       votes[socket.id] = message;
