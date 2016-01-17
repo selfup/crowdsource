@@ -82,18 +82,6 @@ app.get('/live_poll/:id', (req, res) => {
   }
 })
 
-// app.post('/live_poll', (req, res) => {
-//   const url = urlGen(req); const liveUrl = liveUrlGen(req)
-//   const id = urlHash(); const liveId = urlHash()
-//   const refAdID = req.body.liveAdVote
-//   const propUpdate = refAdID[`${Object.keys(refAdID)[0]}`]
-//   console.log(propUpdate)
-//   const adminVoteObject = adminVotes[`${Object.keys(refAdID)[0]}`]
-//   console.log(adminVoteObject[propUpdate] += 1)
-//   // console.log('SENT')
-//   res.redirect('/thanks')
-// })
-
 app.get('/thanks', (req, res) => {
   res.render('thanks')
 })
@@ -104,11 +92,12 @@ app.get('/student_poll', (req, res) => {
 
 io.on('connection', (socket) => {
   io.sockets.emit('usersConnected', io.engine.clientsCount)
-  io.sockets.send(adminVotes)
   io.emit('liveAdminVote', adminVotes)
-  socket.on('message', (channel, message) => {
+  socket.on('message', function (channel, message) {
     if (channel === 'voteCast') {
-      console.log(message)
+      var aP = adminPolls[`${message[1]}`]
+      var aN = adminVotes[message[1]][`${[message[0]]}`] += 1
+      socket.emit('adminLiveChannel', [aP, aN])
     }
   })
 
