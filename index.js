@@ -47,12 +47,14 @@ app.get('/admin_poll', (req, res) => {
 app.post('/admin_poll', (req, res) => {
   const url = urlGen(req); const liveUrl = liveUrlGen(req)
   const id = urlHash(); const liveId = urlHash()
+  const adminTally = {
+      first: 0,
+      second: 0,
+      third: 0
+  }
 
   adminPolls[id] = req.body.adminPoll; adminVotes[id] = adminTally
   adminPolls[`${id}`]['refId'] = id; liveAdminPolls[liveId] = adminPolls[id]
-  console.log(liveAdminPolls)
-  console.log(adminPolls)
-  console.log(adminVotes)
   res.render('links', {links: id, url: url, liveId: liveId, liveUrl: liveUrl});
 })
 
@@ -67,6 +69,10 @@ app.get('/admin_poll/:id', (req, res) => {
   }
 })
 
+app.get('/thanks', (req, res) => {
+  res.render('thanks')
+})
+
 app.get('/live_poll/:id', (req, res) => {
   const url = urlGen(req)
   const liveLink = url.split('/')[4]
@@ -78,16 +84,7 @@ app.get('/live_poll/:id', (req, res) => {
   }
 })
 
-app.post('/live_poll', (req, res) => {
-  const url = urlGen(req); const liveUrl = liveUrlGen(req)
-  const id = urlHash(); const liveId = urlHash()
-  const refAdID = req.body.liveAdVote
-  const propUpdate = refAdID[`${Object.keys(refAdID)[0]}`]
-  const adminVoteObject = adminVotes[`${Object.keys(refAdID)[0]}`]
-  console.log(refAdID)
-  console.log(propUpdate)
-  console.log(adminVoteObject[propUpdate] += 1)
-
+app.get('/thanks', (req, res) => {
   res.render('thanks')
 })
 
@@ -97,14 +94,13 @@ app.get('/student_poll', (req, res) => {
 
 io.on('connection', (socket) => {
   io.sockets.emit('usersConnected', io.engine.clientsCount)
-  socket.send(adminVotes)
-  socket.emit('liveAdminVote', adminVotes)
-  console.log(adminVotes)
-  socket.on('message', (channel, message) => {
+  io.emit('liveAdminVote', adminVotes)
+  socket.on('message', function (channel, message) {
     if (channel === 'voteCast') {
-      votes[socket.id] = message;
-      socket.emit('userVote', message)
-      socket.emit('voteCount', countVotes(votes))
+      console.log(adminVotes);
+      var aP = adminPolls[`${message[1]}`]
+      var aN = adminVotes[`${message[1]}`][`${[message[0]]}`] += 1
+      io.emit('adminLiveChannel', adminVotes)
     }
   })
 
@@ -113,24 +109,5 @@ io.on('connection', (socket) => {
     io.sockets.emit('usersConnected', io.engine.clientsCount)
   })
 })
-
-const countVotes = (votes) => {
-  const voteCount = {
-      A: 0,
-      B: 0,
-      C: 0,
-      D: 0
-  }
-  for (vote in votes) {
-    voteCount[votes[vote]]++
-  }
-  return voteCount
-}
-
-const adminTally = {
-    first: 0,
-    second: 0,
-    third: 0
-}
 
 module.exports = server

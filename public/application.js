@@ -1,8 +1,18 @@
 'use strict'
 const socket = io()
+const submitsLive = document.querySelectorAll('#submits-live')
+const adminLiveChannel = document.getElementById('admin-live-channel')
 
-// $('#submit-admin-poll').on('click', () => {
-//   const toUpdate = $('input:checked').value
-//   console.log(toUpdate);
-//   socket.send('liveAdminPoll', toUpdate)
-// })
+for (var i = 0; i < submitsLive.length; i++) {
+  submitsLive[i].addEventListener('click', function () {
+    socket.send('voteCast', [this.value, this.name])
+  })
+}
+
+socket.on("adminLiveChannel", function (message) {
+  var url = window.location.href
+  var match = url.split('/')[4];
+  var stats = message[`${url.split('/')[4]}`]
+
+  return $(adminLiveChannel).text(`${stats.first} ${stats.second} ${stats.third}`)
+})
