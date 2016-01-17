@@ -6,11 +6,12 @@ const _ = require('lodash')
 const app = express()
 const port = process.env.PORT || 3000
 const bodyParser = require('body-parser')
-const votes = {}
+
 const adminVotes = {}
 const adminPolls = {}
 const liveAdminPolls = {}
 const adminUserPolls = {}
+
 const $ = require('jquery')
 
 const server = http.createServer(app)
@@ -97,8 +98,7 @@ io.on('connection', (socket) => {
   io.emit('liveAdminVote', adminVotes)
   socket.on('message', function (channel, message) {
     if (channel === 'voteCast') {
-      var aP = adminPolls[`${message[1]}`]
-      var aN = adminVotes[`${message[1]}`][`${[message[0]]}`] += 1
+      adminVotes[`${message[1]}`][`${[message[0]]}`] += 1
       io.emit('adminLiveChannel', adminVotes)
     }
   })
