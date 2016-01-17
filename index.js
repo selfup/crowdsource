@@ -85,14 +85,12 @@ app.get('/thanks', (req, res) => {
 })
 
 io.on('connection', (socket) => {
-  io.sockets.emit('usersConnected', io.engine.clientsCount)
-  io.emit('liveAdminVote', adminVotes)
   socket.on('message', function (channel, message) {
     if (channel === 'voteCast') {
       adminVotes[`${message[1]}`][`${[message[0]]}`] += 1
       io.emit('adminLiveChannel', adminVotes)
-    }
-    if (channel === 'closeThisPoll') {
+    } else if (channel === 'closeThisPoll') {
+      console.log('CLOSED');
       io.emit('pollClosed', message)
     }
   })
