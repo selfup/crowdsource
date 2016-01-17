@@ -2,6 +2,7 @@
 const socket = io()
 const submitsLive = document.querySelectorAll('#submits-live')
 const adminLiveChannel = document.getElementById('admin-live-channel')
+const pollCLosed = document.getElementById('closed')
 
 for (var i = 0; i < submitsLive.length; i++) {
   submitsLive[i].addEventListener('click', function () {
@@ -18,6 +19,11 @@ socket.on("adminLiveChannel", function (message) {
     <h3>First: ${stats.first} Second: ${stats.second} Third: ${stats.third}</h3>`)
 })
 
+socket.on("pollCLosed", function (message) {
+  return $(adminLiveChannel).html(`<h3>Vote Tallies in Order:</h3>
+    <h3>First: ${stats.first} Second: ${stats.second} Third: ${stats.third}</h3>`)
+})
+
 $('#close-poll').on('click', () => {
-    console.log('This poll is now CLOSED')
+    socket.send('closeThisPoll', "This poll has been closed!")
 })

@@ -92,8 +92,8 @@ io.on('connection', (socket) => {
       adminVotes[`${message[1]}`][`${[message[0]]}`] += 1
       io.emit('adminLiveChannel', adminVotes)
     }
-    if (channel === 'voteClosed') {
-      io.emit('adminLiveChannel', adminVotes)
+    if (channel === 'closeThisPoll') {
+      io.emit('pollClosed', message)
     }
   })
 
