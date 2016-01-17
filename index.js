@@ -97,7 +97,6 @@ io.on('connection', (socket) => {
   io.emit('liveAdminVote', adminVotes)
   socket.on('message', function (channel, message) {
     if (channel === 'voteCast') {
-      console.log(adminVotes);
       var aP = adminPolls[`${message[1]}`]
       var aN = adminVotes[`${message[1]}`][`${[message[0]]}`] += 1
       io.emit('adminLiveChannel', adminVotes)
