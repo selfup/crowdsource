@@ -36,6 +36,7 @@ const createObjects = (req, id, tally, liveId) => {
   adminVotes[id] = tally
   adminPolls[id]['refId'] = id
   liveAdPolls[liveId] = adminPolls[id]
+  adminPolls[id]['liveId'] = _.last(Object.keys(liveAdPolls))
 }
 
 app.post('/admin_poll', (req, res) => {
@@ -49,8 +50,8 @@ app.post('/admin_poll', (req, res) => {
       second: 0,
       third: 0
   }
+
   createObjects(req, id, adminTally, liveId)
-  const liveToAdminRef = adminPolls[id]['liveId'] = _.last(Object.keys(liveAdPolls))
   res.render('links', {links: id, url: url, liveId: liveId, liveUrl: liveUrl})
 })
 
