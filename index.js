@@ -7,7 +7,7 @@ const app = express()
 const port = process.env.PORT || 3000
 const adminVotes = {}
 const adminPolls = {}
-const liveAdminPolls = {}
+const liveAdPolls = {}
 const adminUserPolls = {}
 const bodyParser = require('body-parser')
 const h = require('./helpers.js')
@@ -31,6 +31,13 @@ app.get('/admin_poll', (req, res) => {
   res.sendFile(__dirname + '/public/admin_poll.html')
 })
 
+const createObjects = (req, id, adTally, liveId) => {
+  adminPolls[id] = req.body.adminPoll
+  adminVotes[id] = adTally
+  adminPolls[id]['refId'] = id
+  liveAdPolls[liveId] = adminPolls[id]
+}
+
 app.post('/admin_poll', (req, res) => {
   const url = h.urlGen(req)
   const liveUrl = h.liveUrlGen(req)
@@ -43,11 +50,7 @@ app.post('/admin_poll', (req, res) => {
       third: 0
   }
 
-  adminPolls[id] = req.body.adminPoll
-  adminVotes[id] = adminTally
-  adminPolls[id]['refId'] = id
-  liveAdminPolls[liveId] = adminPolls[id]
-
+  createObjects(req, id, adminTally, liveId)
   res.render('links', {links: id, url: url, liveId: liveId, liveUrl: liveUrl})
 })
 
@@ -70,10 +73,10 @@ app.get('/live_poll/:id', (req, res) => {
   const url = h.urlGen(req)
   const liveLink = url.split('/')[4]
 
-  if (!liveAdminPolls[`${liveLink}`]) {
+  if (!liveAdPolls[`${liveLink}`]) {
     res.render('404')
   } else {
-    res.render('liveAdminPoll', { liveAdminPolls: liveAdminPolls[`${liveLink}`]})
+    res.render('liveAdminPoll', { liveAdPolls: liveAdPolls[`${liveLink}`]})
   }
 })
 

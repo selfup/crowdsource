@@ -10,8 +10,8 @@
 <body>
   <div class='jumbotron text-center'>
   <h3>Click an answer to vote!</h3><br>
-  <% Object.getOwnPropertyNames(liveAdminPolls.answers).forEach(function(val, idx, array) { %>
-    <a href='/thanks'><button class='btn btn-primary' id="submits-live" name="<%= liveAdminPolls['refId'] %>" value=<%= Object.keys(liveAdminPolls.answers)[idx] %>><%= liveAdminPolls.answers[val] %></button></a><br><br>
+  <% Object.getOwnPropertyNames(liveAdPolls.answers).forEach(function(val, idx, array) { %>
+    <a href='/thanks'><button class='btn btn-primary' id="submits-live" name="<%= liveAdPolls['refId'] %>" value=<%= Object.keys(liveAdPolls.answers)[idx] %>><%= liveAdPolls.answers[val] %></button></a><br><br>
   <% }) %>
 </div>
 <script src="/jquery.js"></script>
