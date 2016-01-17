@@ -82,17 +82,17 @@ app.get('/live_poll/:id', (req, res) => {
   }
 })
 
-app.post('/live_poll', (req, res) => {
-  const url = urlGen(req); const liveUrl = liveUrlGen(req)
-  const id = urlHash(); const liveId = urlHash()
-  const refAdID = req.body.liveAdVote
-  const propUpdate = refAdID[`${Object.keys(refAdID)[0]}`]
-  console.log(propUpdate)
-  const adminVoteObject = adminVotes[`${Object.keys(refAdID)[0]}`]
-  console.log(adminVoteObject[propUpdate] += 1)
-  // console.log('SENT')
-  res.redirect('/thanks')
-})
+// app.post('/live_poll', (req, res) => {
+//   const url = urlGen(req); const liveUrl = liveUrlGen(req)
+//   const id = urlHash(); const liveId = urlHash()
+//   const refAdID = req.body.liveAdVote
+//   const propUpdate = refAdID[`${Object.keys(refAdID)[0]}`]
+//   console.log(propUpdate)
+//   const adminVoteObject = adminVotes[`${Object.keys(refAdID)[0]}`]
+//   console.log(adminVoteObject[propUpdate] += 1)
+//   // console.log('SENT')
+//   res.redirect('/thanks')
+// })
 
 app.get('/thanks', (req, res) => {
   res.render('thanks')
@@ -106,11 +106,9 @@ io.on('connection', (socket) => {
   io.sockets.emit('usersConnected', io.engine.clientsCount)
   io.sockets.send(adminVotes)
   io.emit('liveAdminVote', adminVotes)
-  console.log('WOW')
-  console.log(adminVotes)
   socket.on('message', (channel, message) => {
     if (channel === 'voteCast') {
-      console.log('lolol')
+      console.log(message)
     }
   })
 
