@@ -2,20 +2,22 @@
 <html>
   <head>
     <title>Crowdsource</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <link rel='stylesheet' href='/custom.css'>
   </head>
   <body>
-    <h3>Your Links!</h3>
-    <br>
-    <h4>Admin Link:</h4>
-    <div><a href=<%=url + '/' + links %>><%=url + '/' + links %></a></div>
-    <br>
-    <h4>Live Voting link:</h4>
-    <div><a href=<%=liveUrl + '/' + liveId %>><%=liveUrl + '/' + liveId %></a></div>
-
+    <div class='jumbotron text-center'>
+      <h3>Your Links!</h3>
+      <br>
+      <h4>Admin Link:</h4>
+      <div><a href=<%=url + '/' + links %>><%=url + '/' + links %></a></div>
+      <br>
+      <h4>Live Voting link:</h4>
+      <div><a href=<%=liveUrl + '/' + liveId %>><%=liveUrl + '/' + liveId %></a></div>
+    </div>
     <script src="/jquery.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/application.js"></script>
-
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
   </body>
 </html>

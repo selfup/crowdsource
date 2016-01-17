@@ -1,6 +1,6 @@
 <html>
 <head>
-<title></title>
+<title>Crowdsource</title>
 </head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,12 +8,13 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 <link rel='stylesheet' href='/custom.css'>
 <body>
-  <% Object.getOwnPropertyNames(adminPolls.answers).forEach(function(val, idx, array) { %>
-    <%= adminPolls.answers[val] %>
-  <% }) %>
+  <div class='jumbotron text-center'>
+    <% Object.getOwnPropertyNames(adminPolls.answers).forEach(function(val, idx, array) { %>
+      <%= adminPolls.answers[val] %>
+    <% }) %>
 
-  <div id="admin-live-channel"></div>
-
+    <div id="admin-live-channel"></div>
+  </div>
   <script src="/jquery.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script src="/application.js"></script>
