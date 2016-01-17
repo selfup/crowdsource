@@ -47,12 +47,14 @@ app.get('/admin_poll', (req, res) => {
 app.post('/admin_poll', (req, res) => {
   const url = urlGen(req); const liveUrl = liveUrlGen(req)
   const id = urlHash(); const liveId = urlHash()
+  const adminTally = {
+      first: 0,
+      second: 0,
+      third: 0
+  }
 
   adminPolls[id] = req.body.adminPoll; adminVotes[id] = adminTally
   adminPolls[`${id}`]['refId'] = id; liveAdminPolls[liveId] = adminPolls[id]
-  console.log(liveAdminPolls)
-  console.log(adminPolls)
-  console.log(adminVotes)
   res.render('links', {links: id, url: url, liveId: liveId, liveUrl: liveUrl});
 })
 
@@ -95,9 +97,10 @@ io.on('connection', (socket) => {
   io.emit('liveAdminVote', adminVotes)
   socket.on('message', function (channel, message) {
     if (channel === 'voteCast') {
+      console.log(adminVotes);
       var aP = adminPolls[`${message[1]}`]
-      var aN = adminVotes[message[1]][`${[message[0]]}`] += 1
-      socket.emit('adminLiveChannel', [aP, aN])
+      var aN = adminVotes[`${message[1]}`][`${[message[0]]}`] += 1
+      io.emit('adminLiveChannel', adminVotes)
     }
   })
 
@@ -106,11 +109,5 @@ io.on('connection', (socket) => {
     io.sockets.emit('usersConnected', io.engine.clientsCount)
   })
 })
-
-const adminTally = {
-    first: 0,
-    second: 0,
-    third: 0
-}
 
 module.exports = server
