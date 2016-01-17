@@ -91,6 +91,7 @@ io.on('connection', (socket) => {
       io.emit('adminLiveChannel', adminVotes)
     }
     if (channel === 'closeThisPoll') {
+      delete liveAdPolls[`${message[2]}`]
       io.emit('pollClosed', message)
     }
   })

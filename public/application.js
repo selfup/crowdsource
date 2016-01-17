@@ -27,10 +27,10 @@ socket.on("pollClosed", function (message) {
   if (match === message[1]) {
     return $(pollClosed).html(`<h4>Poll Closed</h4>`)
   } else if (match === message[2]) {
+    $('#votes').hide()
     return $(pollClosed).html(`<h4>Poll Closed</h4>`)
   }
 })
-
 
 $('#close-poll').on('click', () => {
   var match = matchUrl()

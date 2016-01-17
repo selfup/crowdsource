@@ -10,9 +10,9 @@
 <body>
   <div class='jumbotron text-center'>
   <h3>Click an answer to vote!</h3><br>
-  <% Object.getOwnPropertyNames(liveAdPolls.answers).forEach(function(val, idx, array) { %>
+  <div id='votes'><% Object.getOwnPropertyNames(liveAdPolls.answers).forEach(function(val, idx, array) { %>
     <a href='/thanks'><button class='btn btn-primary' id="submits-live" name="<%= liveAdPolls['refId'] %>" value=<%= Object.keys(liveAdPolls.answers)[idx] %>><%= liveAdPolls.answers[val] %></button></a><br><br>
-  <% }) %>
+  <% }) %></div>
   <div id="closed"></div>
 </div>
 <script src="/jquery.js"></script>
