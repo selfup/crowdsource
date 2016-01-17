@@ -9,11 +9,14 @@
 <link rel='stylesheet' href='/custom.css'>
 <body>
   <div class='jumbotron text-center'>
-    <% Object.getOwnPropertyNames(adminPolls.answers).forEach(function(val, idx, array) { %>
+    <p><% Object.getOwnPropertyNames(adminPolls.answers).forEach(function(val, idx, array) { %>
       <%= adminPolls.answers[val] %>
-    <% }) %>
+    <% }) %></p>
 
+    <div class ='hidden' id='live-id'><%= adminPolls.liveId %></div>
     <div id="admin-live-channel"></div>
+    <button class='btn btn-danger' id='close-poll'>Close Poll</button>
+    <div id="closed"></div>
   </div>
   <script src="/jquery.js"></script>
   <script src="/socket.io/socket.io.js"></script>

@@ -13,6 +13,7 @@
   <% Object.getOwnPropertyNames(liveAdPolls.answers).forEach(function(val, idx, array) { %>
     <a href='/thanks'><button class='btn btn-primary' id="submits-live" name="<%= liveAdPolls['refId'] %>" value=<%= Object.keys(liveAdPolls.answers)[idx] %>><%= liveAdPolls.answers[val] %></button></a><br><br>
   <% }) %>
+  <div id="closed"></div>
 </div>
 <script src="/jquery.js"></script>
 <script src="/socket.io/socket.io.js"></script>

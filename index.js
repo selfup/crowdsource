@@ -31,9 +31,9 @@ app.get('/admin_poll', (req, res) => {
   res.sendFile(__dirname + '/public/admin_poll.html')
 })
 
-const createObjects = (req, id, adTally, liveId) => {
+const createObjects = (req, id, tally, liveId) => {
   adminPolls[id] = req.body.adminPoll
-  adminVotes[id] = adTally
+  adminVotes[id] = tally
   adminPolls[id]['refId'] = id
   liveAdPolls[liveId] = adminPolls[id]
 }
@@ -49,8 +49,10 @@ app.post('/admin_poll', (req, res) => {
       second: 0,
       third: 0
   }
-
   createObjects(req, id, adminTally, liveId)
+  const liveToAdminRef = adminPolls[id]['liveId'] = _.last(Object.keys(liveAdPolls))
+  console.log(liveToAdminRef)
+  console.log(adminPolls);
   res.render('links', {links: id, url: url, liveId: liveId, liveUrl: liveUrl})
 })
 
@@ -85,12 +87,15 @@ app.get('/thanks', (req, res) => {
 })
 
 io.on('connection', (socket) => {
-  io.sockets.emit('usersConnected', io.engine.clientsCount)
-  io.emit('liveAdminVote', adminVotes)
   socket.on('message', function (channel, message) {
     if (channel === 'voteCast') {
       adminVotes[`${message[1]}`][`${[message[0]]}`] += 1
       io.emit('adminLiveChannel', adminVotes)
+      console.log(message);
+    }
+    if (channel === 'closeThisPoll') {
+      console.log(message);
+      io.emit('pollClosed', message)
     }
   })
 
