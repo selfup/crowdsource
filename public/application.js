@@ -14,5 +14,6 @@ socket.on("adminLiveChannel", function (message) {
   var match = url.split('/')[4];
   var stats = message[`${url.split('/')[4]}`]
 
-  return $(adminLiveChannel).text(`${stats.first} ${stats.second} ${stats.third}`)
+  return $(adminLiveChannel).html(`<h3>Vote Tallies in Order:</h3>
+    <h3>First: ${stats.first} Second: ${stats.second} Third: ${stats.third}</h3>`)
 })
