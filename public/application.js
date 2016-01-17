@@ -20,8 +20,9 @@ socket.on("adminLiveChannel", function (message) {
 
 socket.on("pollClosed", function (message) {
   var match = window.location.href.split('/')[4]
-  console.log(message);
   if (match === message[1]) {
+    return $(pollClosed).html(`<h4>Poll Closed</h4>`)
+  } else if (match === message[2]) {
     return $(pollClosed).html(`<h4>Poll Closed</h4>`)
   }
 })
@@ -29,6 +30,7 @@ socket.on("pollClosed", function (message) {
 $('#close-poll').on('click', () => {
   var url = window.location.href
   var match = url.split('/')[4]
+  var liveIdRef = $('#live-id').text()
 
-  socket.send('closeThisPoll', ["This poll has been closed!", match])
+  socket.send('closeThisPoll', ["This poll has been closed!", match, liveIdRef])
 })

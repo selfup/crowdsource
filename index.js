@@ -49,8 +49,10 @@ app.post('/admin_poll', (req, res) => {
       second: 0,
       third: 0
   }
-
   createObjects(req, id, adminTally, liveId)
+  const liveToAdminRef = adminPolls[id]['liveId'] = _.last(Object.keys(liveAdPolls))
+  console.log(liveToAdminRef)
+  console.log(adminPolls);
   res.render('links', {links: id, url: url, liveId: liveId, liveUrl: liveUrl})
 })
 
@@ -89,7 +91,7 @@ io.on('connection', (socket) => {
     if (channel === 'voteCast') {
       adminVotes[`${message[1]}`][`${[message[0]]}`] += 1
       io.emit('adminLiveChannel', adminVotes)
-      console.log(adminVotes);
+      console.log(message);
     }
     if (channel === 'closeThisPoll') {
       console.log(message);
