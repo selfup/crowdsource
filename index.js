@@ -6,7 +6,7 @@ const _ = require('lodash')
 const app = express()
 const port = process.env.PORT || 3000
 const bodyParser = require('body-parser')
-
+const Helper = require('./helpers.js')
 const adminVotes = {}
 const adminPolls = {}
 const liveAdminPolls = {}
@@ -29,25 +29,16 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html')
 })
 
-const urlHash = () => {
-  return Math.random().toString(36).substring(7)
-}
-
-const urlGen = (req) => {
-  return `${req.protocol}://${req.get('host')}${req.originalUrl}`
-}
-
-const liveUrlGen = (req) => {
-  return `${req.protocol}://${req.get('host')}/live_poll`
-}
-
 app.get('/admin_poll', (req, res) => {
   res.sendFile(__dirname + '/public/admin_poll.html')
 })
 
 app.post('/admin_poll', (req, res) => {
-  const url = urlGen(req); const liveUrl = liveUrlGen(req)
-  const id = urlHash(); const liveId = urlHash()
+  const url = new Helper(req).urlGen
+  const liveUrl = new Helper(req).liveUrlGen
+  const id = new Helper().urlHash
+  const liveId = new Helper().urlHash
+
   const adminTally = {
       first: 0,
       second: 0,
@@ -56,17 +47,17 @@ app.post('/admin_poll', (req, res) => {
 
   adminPolls[id] = req.body.adminPoll; adminVotes[id] = adminTally
   adminPolls[`${id}`]['refId'] = id; liveAdminPolls[liveId] = adminPolls[id]
-  res.render('links', {links: id, url: url, liveId: liveId, liveUrl: liveUrl});
+  res.render('links', {links: id, url: url, liveId: liveId, liveUrl: liveUrl})
 })
 
 app.get('/admin_poll/:id', (req, res) => {
-  const url = urlGen(req)
+  const url = new Helper(req).urlGen
   const link = url.split('/')[4]
 
   if (!adminPolls[`${link}`]) {
     res.render('404')
   } else {
-    res.render('admin', {adminPolls: adminPolls[`${link}`], link: link});
+    res.render('admin', {adminPolls: adminPolls[`${link}`], link: link})
   }
 })
 
@@ -75,13 +66,13 @@ app.get('/thanks', (req, res) => {
 })
 
 app.get('/live_poll/:id', (req, res) => {
-  const url = urlGen(req)
+  const url = new Helper(req).urlGen
   const liveLink = url.split('/')[4]
 
   if (!liveAdminPolls[`${liveLink}`]) {
     res.render('404')
   } else {
-    res.render('liveAdminPoll', { liveAdminPolls: liveAdminPolls[`${liveLink}`]});
+    res.render('liveAdminPoll', { liveAdminPolls: liveAdminPolls[`${liveLink}`]})
   }
 })
 
@@ -104,7 +95,6 @@ io.on('connection', (socket) => {
   })
 
   socket.on('disconnect', () => {
-    delete votes[socket.id]
     io.sockets.emit('usersConnected', io.engine.clientsCount)
   })
 })
