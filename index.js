@@ -89,8 +89,9 @@ io.on('connection', (socket) => {
     if (channel === 'voteCast') {
       adminVotes[`${message[1]}`][`${[message[0]]}`] += 1
       io.emit('adminLiveChannel', adminVotes)
-    } else if (channel === 'closeThisPoll') {
-      console.log('CLOSED');
+    }
+    if (channel === 'closeThisPoll') {
+      console.log(message);
       io.emit('pollClosed', message)
     }
   })

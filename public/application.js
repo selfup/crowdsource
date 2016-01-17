@@ -11,23 +11,26 @@ for (var i = 0; i < submitsLive.length; i++) {
 }
 
 socket.on("adminLiveChannel", function (message) {
-  var url = window.location.href
-  var match = url.split('/')[4];
-  var stats = message[`${url.split('/')[4]}`]
+  var match = window.location.href.split('/')[4]
+  var stats = message[`${match}`]
 
   return $(adminLiveChannel).html(`<h4>Vote Tallies in Order:</h4>
   <h4>First: ${stats.first} Second: ${stats.second} Third: ${stats.third}</h4>`)
 })
 
 socket.on("pollCLosed", function (message) {
-  var url = window.location.href
-  var match = url.split('/')[4];
-  var stats = message[`${url.split('/')[4]}`]
+  var match = window.location.href.split('/')[4]
 
-  return $(pollClosed).html(`<h4>Poll Closed</h4>`)
+  if (match === message[1]) {
+    return $(pollClosed).html(`<h4>Poll Closed</h4>`)
+  }
 })
 
 $('#close-poll').on('click', () => {
-    socket.send('closeThisPoll', "This poll has been closed!")
-    $('#closed').append("CLOSED")
+  var url = window.location.href
+  var match = url.split('/')[4]
+
+  console.log(match)
+
+  socket.send('closeThisPoll', ["This poll has been closed!", match])
 })
