@@ -31,9 +31,9 @@ app.get('/admin_poll', (req, res) => {
   res.sendFile(__dirname + '/public/admin_poll.html')
 })
 
-const createObjects = (req, id, adTally, liveId) => {
+const createObjects = (req, id, tally, liveId) => {
   adminPolls[id] = req.body.adminPoll
-  adminVotes[id] = adTally
+  adminVotes[id] = tally
   adminPolls[id]['refId'] = id
   liveAdPolls[liveId] = adminPolls[id]
 }
@@ -90,6 +90,9 @@ io.on('connection', (socket) => {
   socket.on('message', function (channel, message) {
     if (channel === 'voteCast') {
       adminVotes[`${message[1]}`][`${[message[0]]}`] += 1
+      io.emit('adminLiveChannel', adminVotes)
+    }
+    if (channel === 'voteClosed') {
       io.emit('adminLiveChannel', adminVotes)
     }
   })
