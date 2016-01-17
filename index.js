@@ -5,17 +5,15 @@ const socketIo = require('socket.io')
 const _ = require('lodash')
 const app = express()
 const port = process.env.PORT || 3000
-const bodyParser = require('body-parser')
-const Helper = require('./helpers.js')
 const adminVotes = {}
 const adminPolls = {}
 const liveAdminPolls = {}
 const adminUserPolls = {}
-
-const $ = require('jquery')
+const bodyParser = require('body-parser')
+const h = require('./helpers.js')
 
 const server = http.createServer(app)
-.listen(port, () => {
+  .listen(port, () => {
   console.log('Listening on port ' + port + '.')
 })
 
@@ -34,10 +32,10 @@ app.get('/admin_poll', (req, res) => {
 })
 
 app.post('/admin_poll', (req, res) => {
-  const url = new Helper(req).urlGen
-  const liveUrl = new Helper(req).liveUrlGen
-  const id = new Helper().urlHash
-  const liveId = new Helper().urlHash
+  const url = h.urlGen(req)
+  const liveUrl = h.liveUrlGen(req)
+  const id = h.urlHash()
+  const liveId = h.urlHash()
 
   const adminTally = {
       first: 0,
@@ -45,13 +43,16 @@ app.post('/admin_poll', (req, res) => {
       third: 0
   }
 
-  adminPolls[id] = req.body.adminPoll; adminVotes[id] = adminTally
-  adminPolls[`${id}`]['refId'] = id; liveAdminPolls[liveId] = adminPolls[id]
+  adminPolls[id] = req.body.adminPoll
+  adminVotes[id] = adminTally
+  adminPolls[id]['refId'] = id
+  liveAdminPolls[liveId] = adminPolls[id]
+
   res.render('links', {links: id, url: url, liveId: liveId, liveUrl: liveUrl})
 })
 
 app.get('/admin_poll/:id', (req, res) => {
-  const url = new Helper(req).urlGen
+  const url = h.urlGen(req)
   const link = url.split('/')[4]
 
   if (!adminPolls[`${link}`]) {
@@ -66,7 +67,7 @@ app.get('/thanks', (req, res) => {
 })
 
 app.get('/live_poll/:id', (req, res) => {
-  const url = new Helper(req).urlGen
+  const url = h.urlGen(req)
   const liveLink = url.split('/')[4]
 
   if (!liveAdminPolls[`${liveLink}`]) {
@@ -78,10 +79,6 @@ app.get('/live_poll/:id', (req, res) => {
 
 app.get('/thanks', (req, res) => {
   res.render('thanks')
-})
-
-app.get('/student_poll', (req, res) => {
-  res.sendFile(__dirname + '/public/student_poll.html')
 })
 
 io.on('connection', (socket) => {

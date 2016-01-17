@@ -1,22 +1,11 @@
-'use strict'
-
-class Helper {
-  constructor(req) {
-    this.r = req
-  }
-
-  get urlHash() {
+module.exports = {
+  urlHash: () => {
     return Math.random().toString(36).substring(7)
+  },
+  urlGen: (req) => {
+    return `${req.protocol}://${req.get('host')}${req.originalUrl}`
+  },
+  liveUrlGen: (req) => {
+    return `${req.protocol}://${req.get('host')}/live_poll`
   }
-
-  get urlGen() {
-    return `${this.r.protocol}://${this.r.get('host')}${this.r.originalUrl}`
-  }
-
-  get liveUrlGen() {
-    return `${this.r.protocol}://${this.r.get('host')}/live_poll`
-  }
-
 }
-
-module.exports = Helper
