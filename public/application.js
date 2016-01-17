@@ -2,7 +2,7 @@
 const socket = io()
 const submitsLive = document.querySelectorAll('#submits-live')
 const adminLiveChannel = document.getElementById('admin-live-channel')
-const pollCLosed = document.getElementById('closed')
+const pollClosed = document.getElementById('closed')
 
 for (var i = 0; i < submitsLive.length; i++) {
   submitsLive[i].addEventListener('click', function () {
@@ -18,9 +18,9 @@ socket.on("adminLiveChannel", function (message) {
   <h4>First: ${stats.first} Second: ${stats.second} Third: ${stats.third}</h4>`)
 })
 
-socket.on("pollCLosed", function (message) {
+socket.on("pollClosed", function (message) {
   var match = window.location.href.split('/')[4]
-
+  console.log(message);
   if (match === message[1]) {
     return $(pollClosed).html(`<h4>Poll Closed</h4>`)
   }
@@ -29,8 +29,6 @@ socket.on("pollCLosed", function (message) {
 $('#close-poll').on('click', () => {
   var url = window.location.href
   var match = url.split('/')[4]
-
-  console.log(match)
 
   socket.send('closeThisPoll', ["This poll has been closed!", match])
 })

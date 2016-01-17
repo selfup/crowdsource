@@ -89,6 +89,7 @@ io.on('connection', (socket) => {
     if (channel === 'voteCast') {
       adminVotes[`${message[1]}`][`${[message[0]]}`] += 1
       io.emit('adminLiveChannel', adminVotes)
+      console.log(adminVotes);
     }
     if (channel === 'closeThisPoll') {
       console.log(message);
