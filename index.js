@@ -102,6 +102,17 @@ app.get('/live_poll/:id', (req, res) => {
   }
 })
 
+app.get('/live_feedback/:id', (req, res) => {
+  const url = h.urlGen(req)
+  const liveLink = url.split('/')[4]
+
+  if (!liveAdPolls[`${liveLink}`]) {
+    res.render('404')
+  } else {
+    res.render('liveAdminPoll', { liveAdPolls: liveAdPolls[`${liveLink}`]})
+  }
+})
+
 app.get('/thanks', (req, res) => {
   res.render('thanks')
 })
