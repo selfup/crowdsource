@@ -84,10 +84,9 @@ app.post('/live_feedback', (req, res) => {
   const id = h.urlHash()
   const liveId = h.urlHash()
   const liveTally = {}
-
+  console.log(req.body);
   createObjects(req, id, liveTally, liveId)
   findDataAndTally(liveAdPolls[`${liveId}`], liveTally)
-
   if (req.body.minutes) {
     closeTime(liveAdPolls[`${liveId}`], new Date(), req.body.minutes)
   }

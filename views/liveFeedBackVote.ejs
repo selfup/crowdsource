@@ -11,6 +11,7 @@
   <div class='jumbotron text-center'>
   <h3>Click an answer to vote!</h3><br>
   <h3>Question: <%= liveAdPolls['question']['question'] %> </h3>
+  <h4>Phone number to text when decision has been made: <%= liveAdPolls['phone']['phone'] %></h4>
   <div id='votes'><% Object.getOwnPropertyNames(liveAdPolls.answers).forEach(function(val, idx, array) { %>
     <button class='btn btn-primary' id="submits-feedback" name="<%= liveAdPolls['liveId'] %>" title="<%= liveAdPolls['refId'] %>" value=<%= Object.keys(liveAdPolls.answers)[idx] %>>
     <%= liveAdPolls.answers[val] %></button><br><br>
