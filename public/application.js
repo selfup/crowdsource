@@ -46,8 +46,13 @@ const displayFeedback = (stats, displayVotes) => {
 
 socket.on("liveFeedBack", function (message) {
   var match = matchUrl()
-  var h = message[1][`${match}`]['refId']
-  var stats = message[0][`${h}`]
+  var h = message[1][match]['refId']
+  // The if statement errors out on the poller not the voter
+  if (match === h) {
+    var stats = message[0][h]
+    updateVoter(stats, displayVotes)
+  }
+  var stats = message[0][h]
   var displayVotes = []
   updatePoller(stats, displayVotes)
 })
