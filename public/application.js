@@ -21,10 +21,7 @@ for (var i = 0; i < submitsLiveFeedback.length; i++) {
 }
 
 $('#submits-feedback').on('click', function () {
-  count ++
-  if (count >= 1) {
-    $('#votes').hide()
-  }
+  $('#votes').hide()
 })
 
 const matchUrl = () => {
