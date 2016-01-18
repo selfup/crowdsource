@@ -43,7 +43,6 @@ const displayFeedback = (stats, displayVotes) => {
   if (stats !== undefined) {
     Object.getOwnPropertyNames(stats).forEach(function(val, idx, array) {
       var keysForObj = Object.keys(stats)
-      console.log(keysForObj);
       displayVotes.push(`${keysForObj[idx]}: ${stats[val]}`)
     })
   }
@@ -69,7 +68,6 @@ socket.on("adminLiveChannel", function (message) {
 
 socket.on("pollClosed", function (message) {
   var match = matchUrl()
-  console.log('TRYING');
   if (match === message[1]) {
     return $(pollClosed).html(`<h4>Poll Closed</h4>`)
   } else if (match === message[2]) {
