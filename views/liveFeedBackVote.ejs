@@ -10,13 +10,13 @@
 <body>
   <div class='jumbotron text-center'>
   <h3>Click an answer to vote!</h3><br>
-  <%= liveAdPolls['refId'] %>
   <div id='votes'><% Object.getOwnPropertyNames(liveAdPolls.answers).forEach(function(val, idx, array) { %>
-    <a href='/thanks'><button class='btn btn-primary' id="submits-feedback" name="<%= liveAdPolls['liveId'] %>" title="<%= liveAdPolls['refId'] %>" value=<%= Object.keys(liveAdPolls.answers)[idx] %>>
-    <%= liveAdPolls.answers[val] %></button></a><br><br>
+    <button class='btn btn-primary' id="submits-feedback" name="<%= liveAdPolls['liveId'] %>" title="<%= liveAdPolls['refId'] %>" value=<%= Object.keys(liveAdPolls.answers)[idx] %>>
+    <%= liveAdPolls.answers[val] %></button><br><br>
   <% }) %></div>
   <h3>Current Votes Will Show Up As The Votes Come In!</h3>
   <div id='live-feeback'></div>
+  <div id='thanks'></div>
   <div id="closed"></div>
 </div>
 <script src="/jquery.js"></script>

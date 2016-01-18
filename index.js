@@ -73,9 +73,6 @@ app.post('/live_feedback', (req, res) => {
   const liveTally = {}
   createObjects(req, id, liveTally, liveId)
   findDataAndTally(liveAdPolls[`${liveId}`], liveTally)
-  // console.log(adminVotes);
-  // console.log(adminPolls);
-  // console.log(liveAdPolls);
   res.render('live_feedback_links', {links: id, url: url, liveId: liveId, liveUrl: liveUrl})
 })
 
@@ -107,10 +104,7 @@ app.get('/live_poll/:id', (req, res) => {
 
 app.get('/live_feedback_vote/:id', (req, res) => {
   const url = h.urlGen(req)
-  console.log(url);
   const liveLink = url.split('/')[4]
-  console.log(liveLink);
-  console.log(liveAdPolls[`${liveLink}`]['refId']);
   if (!liveAdPolls[`${liveLink}`]) {
     res.render('404')
   } else {
@@ -146,16 +140,9 @@ io.on('connection', (socket) => {
     if (channel === 'feedbackCast') {
       var updateVal = message[0]
       updateThisVal = liveAdPolls[`${message[1]}`]['answers'][`${updateVal}`]
-      console.log(updateVal);
-      console.log(message[1]);
-      console.log(updateThisVal);
-      console.log(adminVotes);
-      console.log(message[2]);
       console.log(adminVotes[`${message[2]}`][`${updateThisVal}`] += 1);
       console.log(adminVotes);
-      // adminVotes[message[1]][`${updateThisVal}`] += 1
-      // adminVotes[`${message[1]}`][`${[message[0]]}`] += 1
-      io.emit('liveFeedBack', adminVotes)
+      io.emit('liveFeedBack', [adminVotes, liveAdPolls])
     }
 
   })

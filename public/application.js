@@ -14,9 +14,6 @@ for (var i = 0; i < submitsLive.length; i++) {
 
 for (var i = 0; i < submitsLiveFeedback.length; i++) {
   submitsLiveFeedback[i].addEventListener('click', function () {
-    console.log(this.value);
-    console.log(this.name);
-    debugger
     socket.send('feedbackCast', [this.value, this.name, this.title])
   })
 }
@@ -25,12 +22,28 @@ const matchUrl = () => {
   return window.location.href.split('/')[4]
 }
 
-socket.on("liveFeedBack", function (message) {
-  console.log(message);
-  var match = matchUrl()
-  var stats = message[`${match}`]
+const displayFeedback = (stats, displayVotes) => {
+  Object.getOwnPropertyNames(stats).forEach(function(val, idx, array) {
+    var keysForObj = Object.keys(stats)
+    displayVotes.push(`${keysForObj[idx]}: ${stats[val]}`)
+  })
+}
 
-  return $(liveFeedBack).html(`<h4>${message}</h4>`)
+socket.on("liveFeedBack", function (message) {
+  var match = matchUrl()
+  var stats = message[0][`${match}`]
+  var displayVotes = []
+  if (match === Object.keys(message[0])[0]) {
+    console.log('YES');
+    displayFeedback(stats, displayVotes)
+    return $(liveFeedBack).html(`<h4>${displayVotes.join(' ')}</h4>`)
+  } else if (match === Object.keys(message[1])[0]) {
+    $('#votes').hide()
+    $('#thanks').html(`<h4>Thanks for Voting!</h4>`)
+    console.log('WOW');
+    displayFeedback(stats, displayVotes)
+    return $(liveFeedBack).html(`<h4>${displayVotes.join(' ')}</h4>`)
+  }
 })
 
 socket.on("adminLiveChannel", function (message) {
