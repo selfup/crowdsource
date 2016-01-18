@@ -65,14 +65,33 @@ app.post('/admin_poll', (req, res) => {
   res.render('links', {links: id, url: url, liveId: liveId, liveUrl: liveUrl})
 })
 
+const closePoll = (message) => {
+  delete liveAdPolls[`${message[2]}`]
+  io.sockets.emit('pollClosed', message)
+}
+
+const closeTime = (feedbackPoll, date, minutes) => {
+  var newDate = new Date(date.getTime() + minutes*60000)
+  var closingTime = newDate - date
+  setTimeout(function() {
+    closePoll(['This poll has been closed!', feedbackPoll['refId'], feedbackPoll['liveId']])
+  }, closingTime)
+}
+
 app.post('/live_feedback', (req, res) => {
   const url = h.urlGen(req)
   const liveUrl = h.feedbackUrlGen(req)
   const id = h.urlHash()
   const liveId = h.urlHash()
   const liveTally = {}
+
   createObjects(req, id, liveTally, liveId)
   findDataAndTally(liveAdPolls[`${liveId}`], liveTally)
+
+  if (req.body.minutes) {
+    closeTime(liveAdPolls[`${liveId}`], new Date(), req.body.minutes)
+  }
+
   res.render('live_feedback_links', {links: id, url: url, liveId: liveId,
                                                           liveUrl: liveUrl})
 })
@@ -136,21 +155,17 @@ io.sockets.on('connection', (socket) => {
       io.sockets.emit('adminLiveChannel', adminVotes)
     }
     if (channel === 'closeThisPoll') {
+      console.log('CLOSING')
+      console.log(message)
       delete liveAdPolls[`${message[2]}`]
       io.sockets.emit('pollClosed', message)
     }
     if (channel === 'feedbackCast') {
-      console.log(message);
       var updateVal = message[0]
       var updateThisVal = liveAdPolls[`${message[1]}`]['answers'][`${updateVal}`]
       adminVotes[`${message[2]}`][`${updateThisVal}`] += 1
       io.sockets.emit('liveFeedBack', [adminVotes, liveAdPolls])
-      console.log('WENT THROUGH');
     }
-  })
-
-  socket.on('disconnect', () => {
-    io.sockets.emit('usersConnected', io.engine.clientsCount)
   })
 })
 
