@@ -10,6 +10,7 @@
 <body>
 <div class='jumbotron text-center'>
   <button class='btn btn-danger' id='close-feedback' name='<%= liveAdPolls['liveId'] %>'>Close Polls</button>
+  <h4>Phone number you sent out: <%= liveAdPolls['phone']['phone'] %></h4>
   <h3>Question: <%= liveAdPolls['question']['question'] %> </h3>
   <h3>Live Feedback Will Show Up When Votes Come In!</h3>
   <div id="feedback-live-channel"></div>
