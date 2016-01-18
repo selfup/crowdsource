@@ -72,6 +72,12 @@ socket.on("pollClosed", function (message) {
   }
 })
 
+$('#close-feedback').on('click', function () {
+  var match = matchUrl()
+  var liveIdRef = this.name
+  socket.send('closeThisPoll', ["This poll has been closed!", match, liveIdRef])
+})
+
 $('#close-poll').on('click', () => {
   var match = matchUrl()
   var liveIdRef = $('#live-id').text()
