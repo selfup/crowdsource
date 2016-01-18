@@ -67,15 +67,15 @@ app.post('/admin_poll', (req, res) => {
 
 app.post('/live_feedback', (req, res) => {
   const url = h.urlGen(req)
-  const liveUrl = h.liveUrlGen(req)
+  const liveUrl = h.feedbackUrlGen(req)
   const id = h.urlHash()
   const liveId = h.urlHash()
   const liveTally = {}
   createObjects(req, id, liveTally, liveId)
   findDataAndTally(liveAdPolls[`${liveId}`], liveTally)
-  console.log(adminVotes);
-  console.log(adminPolls);
-  console.log(liveAdPolls);
+  // console.log(adminVotes);
+  // console.log(adminPolls);
+  // console.log(liveAdPolls);
   res.render('live_feedback_links', {links: id, url: url, liveId: liveId, liveUrl: liveUrl})
 })
 
@@ -105,6 +105,18 @@ app.get('/live_poll/:id', (req, res) => {
   }
 })
 
+app.get('/live_feedback_vote/:id', (req, res) => {
+  const url = h.urlGen(req)
+  console.log(url);
+  const liveLink = url.split('/')[4]
+  console.log(liveLink);
+  if (!liveAdPolls[`${liveLink}`]) {
+    res.render('404')
+  } else {
+    res.render('liveFeedBackVote', { liveAdPolls: liveAdPolls[`${liveLink}`]})
+  }
+})
+
 app.get('/live_feedback/:id', (req, res) => {
   const url = h.urlGen(req)
   const liveLink = url.split('/')[4]
@@ -130,6 +142,12 @@ io.on('connection', (socket) => {
       delete liveAdPolls[`${message[2]}`]
       io.emit('pollClosed', message)
     }
+    if (channel === 'feedbackCast') {
+      console.log(message);
+      // adminVotes[`${message[1]}`][`${[message[0]]}`] += 1
+      io.emit('liveFeedBack', adminVotes)
+    }
+
   })
 
   socket.on('disconnect', () => {

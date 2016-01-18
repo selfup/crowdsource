@@ -8,10 +8,14 @@
 <link rel='stylesheet' href='/custom.css'>
 </head>
 <body>
-<div class='jumbotron text-center'>
-  <h3>Live Feedback Will Show Up When Votes Come In!</h3>
-  <div id="feedback-live-channel"></div>
-  <div id='live-feedback'></div>
+  <div class='jumbotron text-center'>
+  <h3>Click an answer to vote!</h3><br>
+  <div id='votes'><% Object.getOwnPropertyNames(liveAdPolls.answers).forEach(function(val, idx, array) { %>
+    <a href='/thanks'><button class='btn btn-primary' id="submits-feedback" name="<%= liveAdPolls['refId'] %>" value=<%= Object.keys(liveAdPolls.answers)[idx] %>>
+    <%= liveAdPolls.answers[val] %></button></a><br><br>
+  <% }) %></div>
+  <h3>Current Votes Will Show Up As The Votes Come In!</h3>
+  <div id='live-feeback'></div>
   <div id="closed"></div>
 </div>
 <script src="/jquery.js"></script>
