@@ -7,20 +7,25 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 <link rel='stylesheet' href='/custom.css'>
 </head>
+<div class='jumbotron text-center'>
 <h1>Live Feedback Poll Generator</h1>
 
 <section class="new-admin-poll">
   <form action="/live_feedback" method="post">
     <h3>Question</h3>
     <input name='adminPoll[question][question]' type="text"><br><br>
+    <h3>Options:</h3>
     <input name='adminPoll[answers][first]' type="text">
     <input name='adminPoll[answers][second]' type="text">
     <input name='adminPoll[answers][third]' type="text">
-    <input name='adminPoll[answers][fourth]' type="text">
+    <input name='adminPoll[answers][fourth]' type="text"><br><br>
+    <h4>Enter a time limit for the poll: </h4>
+    <input type="text" placeholder="Minutes" name="minutes"><br><br>
     <input name='adminPoll[refId]' type="hidden">
    <button id="submit-admin-poll" class="submit-admin-poll">Submit</button>
 </form>
 </section>
+</div>
 
 <script src="/jquery.js"></script>
 <script src="/socket.io/socket.io.js"></script>

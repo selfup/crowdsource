@@ -5,6 +5,7 @@ const submitsLiveFeedback = document.querySelectorAll('#submits-feedback')
 const adminLiveChannel = document.getElementById('admin-live-channel')
 const pollClosed = document.getElementById('closed')
 const liveFeedBack = document.getElementById('live-feedback')
+var count = 0
 
 for (var i = 0; i < submitsLive.length; i++) {
   submitsLive[i].addEventListener('click', function () {
@@ -18,10 +19,16 @@ for (var i = 0; i < submitsLiveFeedback.length; i++) {
   })
 }
 
+$('#submits-feedback').on('click', function () {
+  count ++
+  if (count >= 1) {
+    $('#votes').hide()
+  }
+})
+
 const matchUrl = () => {
   return window.location.href.split('/')[4]
 }
-
 
 const updateVoter = (stats, displayVotes) => {
   $('#thanks').html(`<h4>Thanks for Voting!</h4>`)
@@ -64,12 +71,19 @@ socket.on("adminLiveChannel", function (message) {
 
 socket.on("pollClosed", function (message) {
   var match = matchUrl()
+  console.log('TRYING');
   if (match === message[1]) {
     return $(pollClosed).html(`<h4>Poll Closed</h4>`)
   } else if (match === message[2]) {
     $('#votes').hide()
     return $(pollClosed).html(`<h4>Poll Closed</h4>`)
   }
+})
+
+$('#close-feedback').on('click', function () {
+  var match = matchUrl()
+  var liveIdRef = this.name
+  socket.send('closeThisPoll', ["This poll has been closed!", match, liveIdRef])
 })
 
 $('#close-poll').on('click', () => {
