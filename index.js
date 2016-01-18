@@ -46,7 +46,7 @@ const createObjects = (req, id, tally, liveId) => {
 const findDataAndTally = (data, liveTally) => {
   Object.getOwnPropertyNames(data.answers).forEach(function(val, idx, array) {
     if (data.answers[val] !== '') {
-      liveTally[data.answers[val]] = 10
+      liveTally[data.answers[val]] = 0
     }
   })
 }
@@ -67,13 +67,14 @@ app.post('/admin_poll', (req, res) => {
 
 app.post('/live_feedback', (req, res) => {
   const url = h.urlGen(req)
-  const liveUrl = h.liveUrlGen(req)
+  const liveUrl = h.feedbackUrlGen(req)
   const id = h.urlHash()
   const liveId = h.urlHash()
   const liveTally = {}
   createObjects(req, id, liveTally, liveId)
   findDataAndTally(liveAdPolls[`${liveId}`], liveTally)
-  res.render('live_feedback_links', {links: id, url: url, liveId: liveId, liveUrl: liveUrl})
+  res.render('live_feedback_links', {links: id, url: url, liveId: liveId,
+                                                          liveUrl: liveUrl})
 })
 
 app.get('/admin_poll/:id', (req, res) => {
@@ -102,6 +103,28 @@ app.get('/live_poll/:id', (req, res) => {
   }
 })
 
+app.get('/live_feedback_vote/:id', (req, res) => {
+  const url = h.urlGen(req)
+  const liveLink = url.split('/')[4]
+  if (!liveAdPolls[`${liveLink}`]) {
+    res.render('404')
+  } else {
+    res.render('liveFeedBackVote', { liveAdPolls: liveAdPolls[`${liveLink}`]})
+  }
+})
+
+app.get('/live_feedback/:id', (req, res) => {
+  const url = h.urlGen(req)
+  const liveLink = url.split('/')[4]
+
+  if (!adminPolls[`${liveLink}`]) {
+    res.render('404')
+  } else {
+    res.render('liveFeedBackPoll', { liveAdPolls: adminPolls[`${liveLink}`],
+                                     adminVotes: adminVotes[`${liveLink}`]})
+  }
+})
+
 app.get('/thanks', (req, res) => {
   res.render('thanks')
 })
@@ -115,6 +138,12 @@ io.on('connection', (socket) => {
     if (channel === 'closeThisPoll') {
       delete liveAdPolls[`${message[2]}`]
       io.emit('pollClosed', message)
+    }
+    if (channel === 'feedbackCast') {
+      var updateVal = message[0]
+      var updateThisVal = liveAdPolls[`${message[1]}`]['answers'][`${updateVal}`]
+      adminVotes[`${message[2]}`][`${updateThisVal}`] += 1
+      io.emit('liveFeedBack', [adminVotes, liveAdPolls])
     }
   })
 

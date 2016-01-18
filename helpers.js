@@ -7,5 +7,8 @@ module.exports = {
   },
   liveUrlGen: (req) => {
     return `${req.protocol}://${req.get('host')}/live_poll`
+  },
+  feedbackUrlGen: (req) => {
+    return `${req.protocol}://${req.get('host')}/live_feedback_vote`
   }
 }
