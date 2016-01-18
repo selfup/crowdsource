@@ -46,31 +46,14 @@ const displayFeedback = (stats, displayVotes) => {
 
 socket.on("liveFeedBack", function (message) {
   var match = matchUrl()
-  var h = message[1][match]['refId']
-  // The if statement errors out on the poller not the voter
-  if (match === h) {
-    var stats = message[0][h]
-    updateVoter(stats, displayVotes)
+  if (message[0][match]) {
+    var displayVotes = []
+    updatePoller(message[0][match], displayVotes)
+  } else if (message[1][match]['refId']) {
+    var displayVotes = []
+    updateVoter(message[0][message[1][match]['refId']], displayVotes)
   }
-  var stats = message[0][h]
-  var displayVotes = []
-  updatePoller(stats, displayVotes)
 })
-
-// socket.on("liveFeedBack", function (message) {
-//   var match = matchUrl()
-//   console.log(message);
-//   var stats = message[0][`${match}`]
-//   var stats2 = message[1][`${match}`]
-//   var displayVotes = []
-//   if (match === Object.keys(message[0])[0]) {
-//     updatePoller(stats, displayVotes)
-//   } else if (match === Object.keys(message[1])[0]) {
-//     updateVoter(stats2, displayVotes)
-//   } else {
-//     console.log('NOPE')
-//   }
-// })
 
 socket.on("adminLiveChannel", function (message) {
   var match = matchUrl()
