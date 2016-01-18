@@ -23,10 +23,23 @@ const matchUrl = () => {
 }
 
 const displayFeedback = (stats, displayVotes) => {
-  Object.getOwnPropertyNames(stats).forEach(function(val, idx, array) {
-    var keysForObj = Object.keys(stats)
-    displayVotes.push(`${keysForObj[idx]}: ${stats[val]}`)
-  })
+  if (stats !== undefined) {
+    Object.getOwnPropertyNames(stats).forEach(function(val, idx, array) {
+      var keysForObj = Object.keys(stats)
+      displayVotes.push(`${keysForObj[idx]}: ${stats[val]}`)
+    })
+  }
+}
+
+const updateVoter = (stats, displayVotes) => {
+  $('#thanks').html(`<h4>Thanks for Voting!</h4>`)
+  displayFeedback(stats, displayVotes)
+  return $(liveFeedBack).html(`<h4>${displayVotes.join(' ')}</h4>`)
+}
+
+const updatePoller = (stats, displayVotes) => {
+  displayFeedback(stats, displayVotes)
+  return $(liveFeedBack).html(`<h4>${displayVotes.join(' ')}</h4>`)
 }
 
 socket.on("liveFeedBack", function (message) {
@@ -34,22 +47,15 @@ socket.on("liveFeedBack", function (message) {
   var stats = message[0][`${match}`]
   var displayVotes = []
   if (match === Object.keys(message[0])[0]) {
-    console.log('YES');
-    displayFeedback(stats, displayVotes)
-    return $(liveFeedBack).html(`<h4>${displayVotes.join(' ')}</h4>`)
+    updatePoller(stats, displayVotes)
   } else if (match === Object.keys(message[1])[0]) {
-    $('#votes').hide()
-    $('#thanks').html(`<h4>Thanks for Voting!</h4>`)
-    console.log('WOW');
-    displayFeedback(stats, displayVotes)
-    return $(liveFeedBack).html(`<h4>${displayVotes.join(' ')}</h4>`)
+    updateVoter(stats, displayVotes)
   }
 })
 
 socket.on("adminLiveChannel", function (message) {
   var match = matchUrl()
   var stats = message[`${match}`]
-
   return $(adminLiveChannel).html(`<h4>Vote Tallies in Order:</h4>
   <h4>First: ${stats.first} Second: ${stats.second} Third: ${stats.third}</h4>`)
 })
@@ -67,6 +73,5 @@ socket.on("pollClosed", function (message) {
 $('#close-poll').on('click', () => {
   var match = matchUrl()
   var liveIdRef = $('#live-id').text()
-
   socket.send('closeThisPoll', ["This poll has been closed!", match, liveIdRef])
 })
