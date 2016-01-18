@@ -44,12 +44,16 @@ const updatePoller = (stats, displayVotes) => {
 
 socket.on("liveFeedBack", function (message) {
   var match = matchUrl()
+  console.log(message);
   var stats = message[0][`${match}`]
+  var stats2 = message[1][`${match}`]
   var displayVotes = []
   if (match === Object.keys(message[0])[0]) {
     updatePoller(stats, displayVotes)
   } else if (match === Object.keys(message[1])[0]) {
-    updateVoter(stats, displayVotes)
+    updateVoter(stats2, displayVotes)
+  } else {
+    alert('NOPE')
   }
 })
 
