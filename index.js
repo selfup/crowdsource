@@ -129,21 +129,23 @@ app.get('/thanks', (req, res) => {
   res.render('thanks')
 })
 
-io.on('connection', (socket) => {
+io.sockets.on('connection', (socket) => {
   socket.on('message', function (channel, message) {
     if (channel === 'voteCast') {
       adminVotes[`${message[1]}`][`${[message[0]]}`] += 1
-      io.emit('adminLiveChannel', adminVotes)
+      io.sockets.emit('adminLiveChannel', adminVotes)
     }
     if (channel === 'closeThisPoll') {
       delete liveAdPolls[`${message[2]}`]
-      io.emit('pollClosed', message)
+      io.sockets.emit('pollClosed', message)
     }
     if (channel === 'feedbackCast') {
+      console.log(message);
       var updateVal = message[0]
       var updateThisVal = liveAdPolls[`${message[1]}`]['answers'][`${updateVal}`]
       adminVotes[`${message[2]}`][`${updateThisVal}`] += 1
-      io.emit('liveFeedBack', [adminVotes, liveAdPolls])
+      io.sockets.emit('liveFeedBack', [adminVotes, liveAdPolls])
+      console.log('WENT THROUGH');
     }
   })
 

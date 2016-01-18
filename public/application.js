@@ -22,14 +22,6 @@ const matchUrl = () => {
   return window.location.href.split('/')[4]
 }
 
-const displayFeedback = (stats, displayVotes) => {
-  if (stats !== undefined) {
-    Object.getOwnPropertyNames(stats).forEach(function(val, idx, array) {
-      var keysForObj = Object.keys(stats)
-      displayVotes.push(`${keysForObj[idx]}: ${stats[val]}`)
-    })
-  }
-}
 
 const updateVoter = (stats, displayVotes) => {
   $('#thanks').html(`<h4>Thanks for Voting!</h4>`)
@@ -42,14 +34,24 @@ const updatePoller = (stats, displayVotes) => {
   return $(liveFeedBack).html(`<h4>${displayVotes.join(' ')}</h4>`)
 }
 
+const displayFeedback = (stats, displayVotes) => {
+  if (stats !== undefined) {
+    Object.getOwnPropertyNames(stats).forEach(function(val, idx, array) {
+      var keysForObj = Object.keys(stats)
+      console.log(keysForObj);
+      displayVotes.push(`${keysForObj[idx]}: ${stats[val]}`)
+    })
+  }
+}
+
 socket.on("liveFeedBack", function (message) {
   var match = matchUrl()
-  var stats = message[0][`${match}`]
-  var displayVotes = []
-  if (match === Object.keys(message[0])[0]) {
-    updatePoller(stats, displayVotes)
-  } else if (match === Object.keys(message[1])[0]) {
-    updateVoter(stats, displayVotes)
+  if (message[0][match]) {
+    var displayVotes = []
+    updatePoller(message[0][match], displayVotes)
+  } else if (message[1][match]['refId']) {
+    var displayVotes = []
+    updateVoter(message[0][message[1][match]['refId']], displayVotes)
   }
 })
 
