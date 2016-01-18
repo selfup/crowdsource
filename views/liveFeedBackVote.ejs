@@ -12,7 +12,7 @@
   <h3>Click an answer to vote!</h3><br>
   <%= liveAdPolls['refId'] %>
   <div id='votes'><% Object.getOwnPropertyNames(liveAdPolls.answers).forEach(function(val, idx, array) { %>
-    <a href='/thanks'><button class='btn btn-primary' id="submits-feedback" name="<%= liveAdPolls['liveId'] %>" value=<%= Object.keys(liveAdPolls.answers)[idx] %>>
+    <a href='/thanks'><button class='btn btn-primary' id="submits-feedback" name="<%= liveAdPolls['liveId'] %>" title="<%= liveAdPolls['refId'] %>" value=<%= Object.keys(liveAdPolls.answers)[idx] %>>
     <%= liveAdPolls.answers[val] %></button></a><br><br>
   <% }) %></div>
   <h3>Current Votes Will Show Up As The Votes Come In!</h3>

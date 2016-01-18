@@ -17,7 +17,7 @@ for (var i = 0; i < submitsLiveFeedback.length; i++) {
     console.log(this.value);
     console.log(this.name);
     debugger
-    socket.send('feedbackCast', [this.value, this.name])
+    socket.send('feedbackCast', [this.value, this.name, this.title])
   })
 }
 
