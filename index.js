@@ -43,6 +43,14 @@ const createObjects = (req, id, tally, liveId) => {
   adminPolls[id]['liveId'] = _.last(Object.keys(liveAdPolls))
 }
 
+const findDataAndTally = (data, liveTally) => {
+  Object.getOwnPropertyNames(data.answers).forEach(function(val, idx, array) {
+    if (data.answers[val] !== '') {
+      liveTally[data.answers[val]] = 10
+    }
+  })
+}
+
 app.post('/admin_poll', (req, res) => {
   const url = h.urlGen(req)
   const liveUrl = h.liveUrlGen(req)
@@ -58,14 +66,6 @@ app.post('/admin_poll', (req, res) => {
   createObjects(req, id, adminTally, liveId)
   res.render('links', {links: id, url: url, liveId: liveId, liveUrl: liveUrl})
 })
-
-const findDataAndTally = (data, liveTally) => {
-  Object.getOwnPropertyNames(data.answers).forEach(function(val, idx, array) {
-    if (liveTally[data.answers[val]] !== '') {
-      liveTally[data.answers[val]] = 0
-    }
-  })
-}
 
 app.post('/live_feedback', (req, res) => {
   const url = h.urlGen(req)
