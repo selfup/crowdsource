@@ -31,11 +31,24 @@ app.get('/admin_poll', (req, res) => {
   res.sendFile(__dirname + '/public/admin_poll.html')
 })
 
+app.get('/live_feedback', (req, res) => {
+  res.sendFile(__dirname + '/public/live_feedback.html')
+})
+
 const createObjects = (req, id, tally, liveId) => {
   adminPolls[id] = req.body.adminPoll
   adminVotes[id] = tally
   adminPolls[id]['refId'] = id
   liveAdPolls[liveId] = adminPolls[id]
+  adminPolls[id]['liveId'] = _.last(Object.keys(liveAdPolls))
+}
+
+const findDataAndTally = (data, liveTally) => {
+  Object.getOwnPropertyNames(data.answers).forEach(function(val, idx, array) {
+    if (data.answers[val] !== '') {
+      liveTally[data.answers[val]] = 10
+    }
+  })
 }
 
 app.post('/admin_poll', (req, res) => {
@@ -43,15 +56,24 @@ app.post('/admin_poll', (req, res) => {
   const liveUrl = h.liveUrlGen(req)
   const id = h.urlHash()
   const liveId = h.urlHash()
-
   const adminTally = {
       first: 0,
       second: 0,
       third: 0
   }
   createObjects(req, id, adminTally, liveId)
-  const liveToAdminRef = adminPolls[id]['liveId'] = _.last(Object.keys(liveAdPolls))
   res.render('links', {links: id, url: url, liveId: liveId, liveUrl: liveUrl})
+})
+
+app.post('/live_feedback', (req, res) => {
+  const url = h.urlGen(req)
+  const liveUrl = h.liveUrlGen(req)
+  const id = h.urlHash()
+  const liveId = h.urlHash()
+  const liveTally = {}
+  createObjects(req, id, liveTally, liveId)
+  findDataAndTally(liveAdPolls[`${liveId}`], liveTally)
+  res.render('live_feedback_links', {links: id, url: url, liveId: liveId, liveUrl: liveUrl})
 })
 
 app.get('/admin_poll/:id', (req, res) => {

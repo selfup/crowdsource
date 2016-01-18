@@ -9,8 +9,11 @@
 <link rel='stylesheet' href='/custom.css'>
 <body>
   <div class='jumbotron text-center'>
+
+    <% var positions = ['First:', 'Second:', 'Third:'] %>
+
     <p><% Object.getOwnPropertyNames(adminPolls.answers).forEach(function(val, idx, array) { %>
-      <%= adminPolls.answers[val] %>
+      <strong><%= positions[idx] %></strong> <%= adminPolls.answers[val] %>
     <% }) %></p>
 
     <div class ='hidden' id='live-id'><%= adminPolls.liveId %></div>
