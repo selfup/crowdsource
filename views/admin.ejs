@@ -9,7 +9,7 @@
 <link rel='stylesheet' href='/custom.css'>
 <body>
   <div class='jumbotron text-center'>
-
+    <h3>Question: <%= adminPolls['question']['question'] %> </h3>
     <% var positions = ['First:', 'Second:', 'Third:'] %>
 
     <p><% Object.getOwnPropertyNames(adminPolls.answers).forEach(function(val, idx, array) { %>
