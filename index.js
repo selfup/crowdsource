@@ -140,6 +140,7 @@ io.sockets.on('connection', (socket) => {
       io.sockets.emit('pollClosed', message)
     }
     if (channel === 'feedbackCast') {
+      console.log(message);
       var updateVal = message[0]
       var updateThisVal = liveAdPolls[`${message[1]}`]['answers'][`${updateVal}`]
       adminVotes[`${message[2]}`][`${updateThisVal}`] += 1

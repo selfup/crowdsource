@@ -53,7 +53,7 @@ socket.on("liveFeedBack", function (message) {
   } else if (match === Object.keys(message[1])[0]) {
     updateVoter(stats2, displayVotes)
   } else {
-    alert('NOPE')
+    console.log('NOPE')
   }
 })
 
