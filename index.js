@@ -56,13 +56,11 @@ app.post('/admin_poll', (req, res) => {
   const liveUrl = h.liveUrlGen(req)
   const id = h.urlHash()
   const liveId = h.urlHash()
-
   const adminTally = {
       first: 0,
       second: 0,
       third: 0
   }
-
   createObjects(req, id, adminTally, liveId)
   res.render('links', {links: id, url: url, liveId: liveId, liveUrl: liveUrl})
 })
@@ -75,8 +73,6 @@ app.post('/live_feedback', (req, res) => {
   const liveTally = {}
   createObjects(req, id, liveTally, liveId)
   findDataAndTally(liveAdPolls[`${liveId}`], liveTally)
-
-  console.log(liveTally);
   res.render('live_feedback_links', {links: id, url: url, liveId: liveId, liveUrl: liveUrl})
 })
 
