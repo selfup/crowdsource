@@ -110,6 +110,7 @@ app.get('/live_feedback_vote/:id', (req, res) => {
   console.log(url);
   const liveLink = url.split('/')[4]
   console.log(liveLink);
+  console.log(liveAdPolls[`${liveLink}`]);
   if (!liveAdPolls[`${liveLink}`]) {
     res.render('404')
   } else {
@@ -143,7 +144,12 @@ io.on('connection', (socket) => {
       io.emit('pollClosed', message)
     }
     if (channel === 'feedbackCast') {
-      console.log(message);
+      var updateVal = message[0]
+      updateThisVal = liveAdPolls[`${message[1]}`]['answers'][`${updateVal}`]
+      console.log(message[1]);
+      console.log(updateThisVal);
+      console.log(adminVotes);
+      // adminVotes[message[1]][`${updateThisVal}`] += 1
       // adminVotes[`${message[1]}`][`${[message[0]]}`] += 1
       io.emit('liveFeedBack', adminVotes)
     }

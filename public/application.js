@@ -14,6 +14,9 @@ for (var i = 0; i < submitsLive.length; i++) {
 
 for (var i = 0; i < submitsLiveFeedback.length; i++) {
   submitsLiveFeedback[i].addEventListener('click', function () {
+    console.log(this.value);
+    console.log(this.name);
+    debugger
     socket.send('feedbackCast', [this.value, this.name])
   })
 }
