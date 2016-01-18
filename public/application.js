@@ -6,6 +6,7 @@ const adminLiveChannel = document.getElementById('admin-live-channel')
 const pollClosed = document.getElementById('closed')
 const liveFeedBack = document.getElementById('live-feedback')
 var count = 0
+var buttonCount = 0
 
 for (var i = 0; i < submitsLive.length; i++) {
   submitsLive[i].addEventListener('click', function () {
@@ -77,6 +78,15 @@ socket.on("pollClosed", function (message) {
   } else if (match === message[2]) {
     $('#votes').hide()
     return $(pollClosed).html(`<h4>Poll Closed</h4>`)
+  }
+})
+
+$('#add-field').on('click', function () {
+  buttonCount ++
+  if (buttonCount > 1) {
+    alert('Only 4 buttons')
+  } else {
+    $('#add-button').append(`<input name='adminPoll[answers][fourth]' type="text">`)
   }
 })
 

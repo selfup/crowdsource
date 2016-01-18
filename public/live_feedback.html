@@ -11,20 +11,23 @@
 <h1>Live Feedback Poll Generator</h1>
 
 <section class="new-admin-poll">
-  <form action="/live_feedback" method="post">
+  <button id='add-field' class='btn btn-primary'>Add Fourth Field</button>
+  <form action="/live_feedback" method="post" id='posts'>
     <h3>Question</h3>
     <input name='adminPoll[question][question]' type="text"><br><br>
+    <div id='add-button'>
     <h3>Options:</h3>
     <input name='adminPoll[answers][first]' type="text">
     <input name='adminPoll[answers][second]' type="text">
     <input name='adminPoll[answers][third]' type="text">
-    <input name='adminPoll[answers][fourth]' type="text"><br><br>
+  </div>
+    <!-- <input name='adminPoll[answers][fourth]' type="text"><br><br> -->
     <h4>Phone number so that the group can text you when they make a decision</h4>
     <input type="text" placeholder="Phone Number" name='adminPoll[phone][phone]'><br><br>
     <h4>Enter a time limit for the poll: </h4>
     <input type="text" placeholder="Minutes" name="minutes"><br><br>
     <input name='adminPoll[refId]' type="hidden">
-   <button id="submit-admin-poll" class="submit-admin-poll">Submit</button>
+   <button id="submit-admin-poll" class="submit-admin-poll btn btn-success">Submit</button>
 </form>
 </section>
 </div>
