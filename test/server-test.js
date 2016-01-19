@@ -1,6 +1,6 @@
-const assert = require('assert');
-const request = require('request');
-const app = require('../index');
+const assert = require('assert')
+const request = require('request')
+const app = require('../index')
 
 describe('Server', function() {
   before(function(done) {
@@ -15,10 +15,32 @@ describe('Server', function() {
   })
 
   after(function() {
-    this.server.close();
+    this.server.close()
   })
 
   it('exist', function() {
     assert(app)
   })
+
+  describe('GET /', function() {
+
+   it('should return a 200', function(done) {
+     this.request.get('/', function(error, response) {
+       if (error) { done(error) }
+       assert.equal(response.statusCode, 200)
+       done()
+     })
+   })
+
+  //  it('should have a body with the name of the application', function(done) {
+  //    var title = this.app.locals.title
+   //
+  //    this.request.get('/', function(error, response) {
+  //      if(error) { done(error) }
+  //      assert(response.body.includes(title),
+  //            `"${response.body}" does not include "${title}"`)
+  //      done()
+  //    })
+  //  })
+ })
 })
