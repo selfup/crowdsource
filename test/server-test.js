@@ -31,5 +31,76 @@ describe('Server', function() {
        done()
      })
    })
- })
+
+    it('should have a body with the name of the application', function(done) {
+      this.request.get('/', function(error, response) {
+        if(error) { done(error) }
+        assert(response.body.includes('Crowdsource'),
+              `"${response.body}" does not include "${'title'}"`)
+        done()
+      })
+    })
+
+    it('should return a 200 on thanks', function(done) {
+      this.request.get('/thanks', function(error, response) {
+        if (error) { done(error) }
+        assert.equal(response.statusCode, 200)
+        done()
+      })
+    })
+
+    it('should return a 200 and a poll does not exist message', function(done) {
+      this.request.get('/live_poll/234', function(error, response) {
+        if (error) { done(error) }
+        assert(response.body.includes('The poll you are looking for'),
+              `"${response.body}" does not include ${'title'}`)
+        done()
+      })
+    })
+
+    it('should return a 200 and a feedback poll does not exist message', function(done) {
+      this.request.get('/live_feedback/234', function(error, response) {
+        if (error) { done(error) }
+        assert(response.body.includes('The poll you are looking for'),
+              `"${response.body}" does not include ${'title'}`)
+        done()
+      })
+    })
+
+    it('should return a 200 and a feedback poll does not exist message', function(done) {
+      this.request.get('/live_feedback_vote/234', function(error, response) {
+        if (error) { done(error) }
+        assert(response.body.includes('The poll you are looking for'),
+              `"${response.body}" does not include ${'title'}`)
+        done()
+      })
+    })
+  })
+
+  describe('POST /admin_poll', function() {
+
+    var fixture = {
+      question: { question: 'll' },
+      answers: { first: 'mm', second: 'kk', third: 'oo' },
+      refId: ''
+    }
+
+    it('admin should not return a 404', function(done) {
+      var payload = {adminPoll: fixture}
+      this.request.post('/admin_poll', {form: payload}, function(error, response) {
+        if (error) { done(error) }
+        assert.notEqual(response.statusCode, 404)
+        done()
+      })
+    })
+
+    it('feedback should not return a 404', function(done) {
+      var payload = {adminPoll: fixture}
+      this.request.post('/live_feedback', {form: payload}, function(error, response) {
+        if (error) { done(error) }
+        assert.notEqual(response.statusCode, 404)
+        done()
+      })
+    })
+  })
 })
