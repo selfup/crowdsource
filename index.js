@@ -105,9 +105,6 @@ app.get('/admin_poll/:id', (req, res) => {
   }
 })
 
-app.get('/thanks', (req, res) => {
-  res.render('thanks')
-})
 
 app.get('/live_poll/:id', (req, res) => {
   const url = h.urlGen(req)
@@ -165,4 +162,4 @@ io.sockets.on('connection', (socket) => {
   })
 })
 
-module.exports = server
+module.exports = app
