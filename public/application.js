@@ -20,7 +20,7 @@ for (var i = 0; i < submitsLiveFeedback.length; i++) {
   })
 }
 
-$('#submits-feedback').on('click', function () {
+$('#votes #submits-feedback').on('click', function () {
   $('#votes').hide()
 })
 
