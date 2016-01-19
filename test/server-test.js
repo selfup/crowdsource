@@ -10,7 +10,7 @@ describe('Server', function() {
       done()
     })
     this.request = request.defaults({
-      baseUrl: 'http://localhost:9876/'
+      baseUrl: 'http://localhost:9000/'
     })
   })
 

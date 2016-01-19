@@ -165,4 +165,4 @@ io.sockets.on('connection', (socket) => {
   })
 })
 
-module.exports = server
+module.exports = app
