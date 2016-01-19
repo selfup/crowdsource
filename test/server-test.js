@@ -79,16 +79,44 @@ describe('Server', function() {
 
   describe('POST /admin_poll', function() {
 
+    beforeEach(() => {
+      app.locals.adminPolls = {}
+      app.locals.adminVotes = {}
+      app.locals.liveAdPolls = {}
+    })
+
     var fixture = {
       question: { question: 'll' },
       answers: { first: 'mm', second: 'kk', third: 'oo' },
       refId: ''
     }
 
+
     it('admin should not return a 404', function(done) {
       var payload = {adminPoll: fixture}
       this.request.post('/admin_poll', {form: payload}, function(error, response) {
         if (error) { done(error) }
+
+        var adminPollsCount = Object.keys(app.locals.adminPolls).length
+        var liveAdPollsCount = Object.keys(app.locals.liveAdPolls).length
+        var adminVotesCount = Object.keys(app.locals.adminVotes).length
+
+        // For Showing How Objects Are Created
+        var exampleAdminPolls = { d7py6ab57b9:
+                                  { question: { question: 'll' },
+                                    answers: { first: 'mm', second: 'kk', third: 'oo' },
+                                    refId: 'd7py6ab57b9',
+                                    liveId: '8kreiwfjemi' } }
+        var exampleLiveAdPolls = { '8kreiwfjemi':
+                                   { question: { question: 'll' },
+                                     answers: { first: 'mm', second: 'kk', third: 'oo' },
+                                     refId: 'd7py6ab57b9',
+                                     liveId: '8kreiwfjemi' } }
+        var exampleAdminVotes = { d7py6ab57b9: { first: 0, second: 0, third: 0 } }
+
+        assert.equal(adminPollsCount, 1, `Expected 1 adminPolls, found ${adminPollsCount}`)
+        assert.equal(liveAdPollsCount, 1, `Expected 1 adminPolls, found ${liveAdPollsCount}`)
+        assert.equal(adminVotesCount, 1, `Expected 1 adminPolls, found ${adminVotesCount}`)
         assert.notEqual(response.statusCode, 404)
         done()
       })
