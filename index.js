@@ -5,12 +5,12 @@ const socketIo = require('socket.io')
 const _ = require('lodash')
 const app = express()
 const port = process.env.PORT || 3000
-const adminVotes = {}
-const adminPolls = {}
-const liveAdPolls = {}
-const adminUserPolls = {}
 const bodyParser = require('body-parser')
 const h = require('./helpers.js')
+
+app.locals.adminVotes = {}
+app.locals.liveAdPolls = {}
+app.locals.adminPolls = {}
 
 const server = http.createServer(app)
   .listen(port, () => {
@@ -36,11 +36,11 @@ app.get('/live_feedback', (req, res) => {
 })
 
 const createObjects = (req, id, tally, liveId) => {
-  adminPolls[id] = req.body.adminPoll
-  adminVotes[id] = tally
-  adminPolls[id]['refId'] = id
-  liveAdPolls[liveId] = adminPolls[id]
-  adminPolls[id]['liveId'] = _.last(Object.keys(liveAdPolls))
+  app.locals.adminPolls[id] = req.body.adminPoll
+  app.locals.adminVotes[id] = tally
+  app.locals.adminPolls[id]['refId'] = id
+  app.locals.liveAdPolls[liveId] = app.locals.adminPolls[id]
+  app.locals.adminPolls[id]['liveId'] = _.last(Object.keys(app.locals.liveAdPolls))
 }
 
 const findDataAndTally = (data, liveTally) => {
@@ -66,7 +66,7 @@ app.post('/admin_poll', (req, res) => {
 })
 
 const closePoll = (message) => {
-  delete liveAdPolls[`${message[2]}`]
+  delete app.locals.liveAdPolls[`${message[2]}`]
   io.sockets.emit('pollClosed', message)
 }
 
@@ -85,11 +85,10 @@ app.post('/live_feedback', (req, res) => {
   const liveId = h.urlHash()
   const liveTally = {}
   createObjects(req, id, liveTally, liveId)
-  findDataAndTally(liveAdPolls[`${liveId}`], liveTally)
+  findDataAndTally(app.locals.liveAdPolls[`${liveId}`], liveTally)
   if (req.body.minutes) {
-    closeTime(liveAdPolls[`${liveId}`], new Date(), req.body.minutes)
+    closeTime(app.locals.liveAdPolls[`${liveId}`], new Date(), req.body.minutes)
   }
-
   res.render('live_feedback_links', {links: id, url: url, liveId: liveId,
                                                           liveUrl: liveUrl})
 })
@@ -98,10 +97,10 @@ app.get('/admin_poll/:id', (req, res) => {
   const url = h.urlGen(req)
   const link = url.split('/')[4]
 
-  if (!adminPolls[`${link}`]) {
+  if (!app.locals.adminPolls[`${link}`]) {
     res.render('404')
   } else {
-    res.render('admin', {adminPolls: adminPolls[`${link}`], link: link})
+    res.render('admin', {adminPolls: app.locals.adminPolls[`${link}`], link: link})
   }
 })
 
@@ -110,20 +109,20 @@ app.get('/live_poll/:id', (req, res) => {
   const url = h.urlGen(req)
   const liveLink = url.split('/')[4]
 
-  if (!liveAdPolls[`${liveLink}`]) {
+  if (!app.locals.liveAdPolls[`${liveLink}`]) {
     res.render('404')
   } else {
-    res.render('liveAdminPoll', { liveAdPolls: liveAdPolls[`${liveLink}`]})
+    res.render('liveAdminPoll', { liveAdPolls: app.locals.liveAdPolls[`${liveLink}`]})
   }
 })
 
 app.get('/live_feedback_vote/:id', (req, res) => {
   const url = h.urlGen(req)
   const liveLink = url.split('/')[4]
-  if (!liveAdPolls[`${liveLink}`]) {
+  if (!app.locals.liveAdPolls[`${liveLink}`]) {
     res.render('404')
   } else {
-    res.render('liveFeedBackVote', { liveAdPolls: liveAdPolls[`${liveLink}`]})
+    res.render('liveFeedBackVote', { liveAdPolls: app.locals.liveAdPolls[`${liveLink}`]})
   }
 })
 
@@ -131,11 +130,15 @@ app.get('/live_feedback/:id', (req, res) => {
   const url = h.urlGen(req)
   const liveLink = url.split('/')[4]
 
-  if (!adminPolls[`${liveLink}`]) {
+  if (!app.locals.adminPolls[`${liveLink}`]) {
     res.render('404')
   } else {
-    res.render('liveFeedBackPoll', { liveAdPolls: adminPolls[`${liveLink}`],
-                                     adminVotes: adminVotes[`${liveLink}`]})
+    res.render('liveFeedBackPoll',
+                {
+                  liveAdPolls: app.locals.adminPolls[`${liveLink}`],
+                  adminVotes: app.locals.adminVotes[`${liveLink}`]
+                }
+              )
   }
 })
 
@@ -146,18 +149,18 @@ app.get('/thanks', (req, res) => {
 io.sockets.on('connection', (socket) => {
   socket.on('message', function (channel, message) {
     if (channel === 'voteCast') {
-      adminVotes[`${message[1]}`][`${[message[0]]}`] += 1
-      io.sockets.emit('adminLiveChannel', adminVotes)
+      app.locals.adminVotes[`${message[1]}`][`${[message[0]]}`] += 1
+      io.sockets.emit('adminLiveChannel', app.locals.adminVotes)
     }
     if (channel === 'closeThisPoll') {
-      delete liveAdPolls[`${message[2]}`]
+      delete app.locals.liveAdPolls[`${message[2]}`]
       io.sockets.emit('pollClosed', message)
     }
     if (channel === 'feedbackCast') {
       var updateVal = message[0]
-      var updateThisVal = liveAdPolls[`${message[1]}`]['answers'][`${updateVal}`]
-      adminVotes[`${message[2]}`][`${updateThisVal}`] += 1
-      io.sockets.emit('liveFeedBack', [adminVotes, liveAdPolls])
+      var updateThisVal = app.locals.liveAdPolls[`${message[1]}`]['answers'][`${updateVal}`]
+      app.locals.adminVotes[`${message[2]}`][`${updateThisVal}`] += 1
+      io.sockets.emit('liveFeedBack', [app.locals.adminVotes, app.locals.liveAdPolls])
     }
   })
 })
