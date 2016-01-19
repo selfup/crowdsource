@@ -3,6 +3,12 @@ const helper = require('../helpers.js')
 
 describe('if the helper is called', function () {
 
+  const req = {
+    protocol: 'http',
+    originalUrl: '/admin',
+    get: (host) => { return 'localhost'}
+  }
+
   it('exists', function () {
     assert(helper)
   })
@@ -16,26 +22,18 @@ describe('if the helper is called', function () {
     assert.notEqual(a, b)
   })
 
-  it('can create a valid url', function () {
-    const req = {
-      protocol: 'http',
-      originalUrl: 'admin',
-      get: (host) => { return 'localhost'}
-    }
-
+  it('can create a live_poll url', function () {
     assert(helper.liveUrlGen(req))
     assert.equal(helper.liveUrlGen(req), 'http://localhost/live_poll')
   })
 
-  it('can generate a live url', function () {
-    const req = {
-      protocol: 'http',
-      originalUrl: '/admin',
-      get: (host) => { return 'localhost'}
-    }
-
+  it('can generate an admin url', function () {
     assert(helper.urlGen(req))
     assert.equal(helper.urlGen(req), 'http://localhost/admin')
   })
 
+  it('can generate an admin url', function () {
+    assert(helper.feedbackUrlGen(req))
+    assert.equal(helper.feedbackUrlGen(req), 'http://localhost/live_feedback_vote')
+  })
 })
