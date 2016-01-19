@@ -67,7 +67,7 @@ describe('Server', function() {
       })
     })
 
-    it('should return a 200 and a feedback poll does not exist message', function(done) {
+    it('should return a 200 and a feedback vote does not exist message', function(done) {
       this.request.get('/live_feedback_vote/234', function(error, response) {
         if (error) { done(error) }
         assert(response.body.includes('The poll you are looking for'),

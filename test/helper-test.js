@@ -32,7 +32,7 @@ describe('if the helper is called', function () {
     assert.equal(helper.urlGen(req), 'http://localhost/admin')
   })
 
-  it('can generate an admin url', function () {
+  it('can generate a feedback url', function () {
     assert(helper.feedbackUrlGen(req))
     assert.equal(helper.feedbackUrlGen(req), 'http://localhost/live_feedback_vote')
   })
