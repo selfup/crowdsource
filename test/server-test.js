@@ -91,6 +91,11 @@ describe('Server', function() {
       refId: ''
     }
 
+    var feedbackFixture = { question: { question: 'Works?' },
+                            answers: { first: 'Yes', second: 'No', third: 'Maybe' },
+                            phone: { phone: '111 111-1111' },
+                            refId: 'lfvv33xflxr',
+                            liveId: 'f7fs7fd2t9' }
 
     it('admin should not return a 404', function(done) {
       var payload = {adminPoll: fixture}
@@ -101,18 +106,21 @@ describe('Server', function() {
         var liveAdPollsCount = Object.keys(app.locals.liveAdPolls).length
         var adminVotesCount = Object.keys(app.locals.adminVotes).length
 
-        // For Showing How Objects Are Created
+        // For Showing How Objects Are Created ********************************
         var exampleAdminPolls = { d7py6ab57b9:
                                   { question: { question: 'll' },
                                     answers: { first: 'mm', second: 'kk', third: 'oo' },
                                     refId: 'd7py6ab57b9',
-                                    liveId: '8kreiwfjemi' } }
+                                    liveId: '8kreiwfjemi' }
+                                }
         var exampleLiveAdPolls = { '8kreiwfjemi':
                                    { question: { question: 'll' },
                                      answers: { first: 'mm', second: 'kk', third: 'oo' },
                                      refId: 'd7py6ab57b9',
-                                     liveId: '8kreiwfjemi' } }
+                                     liveId: '8kreiwfjemi' }
+                                  }
         var exampleAdminVotes = { d7py6ab57b9: { first: 0, second: 0, third: 0 } }
+        // End of Non Used Dummy Data******************************************
 
         assert.equal(adminPollsCount, 1, `Expected 1 adminPolls, found ${adminPollsCount}`)
         assert.equal(liveAdPollsCount, 1, `Expected 1 adminPolls, found ${liveAdPollsCount}`)
@@ -123,9 +131,31 @@ describe('Server', function() {
     })
 
     it('feedback should not return a 404', function(done) {
-      var payload = {adminPoll: fixture}
+      var payload = {adminPoll: feedbackFixture}
       this.request.post('/live_feedback', {form: payload}, function(error, response) {
         if (error) { done(error) }
+
+        var adminPollsCount = Object.keys(app.locals.adminPolls).length
+        var liveAdPollsCount = Object.keys(app.locals.liveAdPolls).length
+
+        // For Showing How Objects Are Created ********************************
+        var exampleLiveAdPolls = { lfvv33xflxr:
+           { question: { question: 'Works?' },
+             answers: { first: 'Yes', second: 'No', third: 'Maybe' },
+             phone: { phone: '111 111-1111' },
+             refId: 'lfvv33xflxr',
+             liveId: 'f7fs7fd2t9' } }
+        var exampleAdminPolls = { f7fs7fd2t9:
+           { question: { question: 'Works?' },
+             answers: { first: 'Yes', second: 'No', third: 'Maybe' },
+             phone: { phone: '111 111-1111' },
+             refId: 'lfvv33xflxr',
+             liveId: 'f7fs7fd2t9' } }
+        var exampleVoteTally = { Yes: 0, No: 0, Maybe: 0 }
+        // End of Non Used Dummy Data *****************************************
+
+        assert.equal(adminPollsCount, 1, `Expected 1 adminPolls, found ${adminPollsCount}`)
+        assert.equal(liveAdPollsCount, 1, `Expected 1 adminPolls, found ${liveAdPollsCount}`)
         assert.notEqual(response.statusCode, 404)
         done()
       })

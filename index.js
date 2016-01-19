@@ -89,7 +89,6 @@ app.post('/live_feedback', (req, res) => {
   if (req.body.minutes) {
     closeTime(app.locals.liveAdPolls[`${liveId}`], new Date(), req.body.minutes)
   }
-
   res.render('live_feedback_links', {links: id, url: url, liveId: liveId,
                                                           liveUrl: liveUrl})
 })
