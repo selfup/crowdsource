@@ -113,12 +113,14 @@ describe('Server', function() {
                                     refId: 'd7py6ab57b9',
                                     liveId: '8kreiwfjemi' }
                                 }
+
         var exampleLiveAdPolls = { '8kreiwfjemi':
                                    { question: { question: 'll' },
                                      answers: { first: 'mm', second: 'kk', third: 'oo' },
                                      refId: 'd7py6ab57b9',
                                      liveId: '8kreiwfjemi' }
                                   }
+
         var exampleAdminVotes = { d7py6ab57b9: { first: 0, second: 0, third: 0 } }
         // End of Non Used Dummy Data******************************************
 
@@ -139,18 +141,22 @@ describe('Server', function() {
         var liveAdPollsCount = Object.keys(app.locals.liveAdPolls).length
 
         // For Showing How Objects Are Created ********************************
-        var exampleLiveAdPolls = { lfvv33xflxr:
-           { question: { question: 'Works?' },
-             answers: { first: 'Yes', second: 'No', third: 'Maybe' },
-             phone: { phone: '111 111-1111' },
-             refId: 'lfvv33xflxr',
-             liveId: 'f7fs7fd2t9' } }
-        var exampleAdminPolls = { f7fs7fd2t9:
-           { question: { question: 'Works?' },
-             answers: { first: 'Yes', second: 'No', third: 'Maybe' },
-             phone: { phone: '111 111-1111' },
-             refId: 'lfvv33xflxr',
-             liveId: 'f7fs7fd2t9' } }
+        var exampleAdminPolls = { lfvv33xflxr:
+                                   { question: { question: 'Works?' },
+                                     answers: { first: 'Yes', second: 'No', third: 'Maybe' },
+                                     phone: { phone: '111 111-1111' },
+                                     refId: 'lfvv33xflxr',
+                                     liveId: 'f7fs7fd2t9' }
+                                 }
+
+        var exampleLiveAdPolls = { f7fs7fd2t9:
+                                   { question: { question: 'Works?' },
+                                     answers: { first: 'Yes', second: 'No', third: 'Maybe' },
+                                     phone: { phone: '111 111-1111' },
+                                     refId: 'lfvv33xflxr',
+                                     liveId: 'f7fs7fd2t9' }
+                                }
+
         var exampleVoteTally = { Yes: 0, No: 0, Maybe: 0 }
         // End of Non Used Dummy Data *****************************************
 
