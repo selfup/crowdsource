@@ -31,16 +31,5 @@ describe('Server', function() {
        done()
      })
    })
-
-  //  it('should have a body with the name of the application', function(done) {
-  //    var title = this.app.locals.title
-   //
-  //    this.request.get('/', function(error, response) {
-  //      if(error) { done(error) }
-  //      assert(response.body.includes(title),
-  //            `"${response.body}" does not include "${title}"`)
-  //      done()
-  //    })
-  //  })
  })
 })
