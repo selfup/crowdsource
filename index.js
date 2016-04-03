@@ -98,7 +98,9 @@ app.get('/admin_poll/:id', (req, res) => {
   const link = url.split('/')[4]
 
   if (!app.locals.adminPolls[`${link}`]) {
-    res.render('404')
+
+    console.log(data);
+    res.render('404', {data: data})
   } else {
     res.render('admin', {adminPolls: app.locals.adminPolls[`${link}`], link: link})
   }
